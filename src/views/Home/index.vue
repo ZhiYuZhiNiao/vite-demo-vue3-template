@@ -2,12 +2,20 @@
   <div class="Home-container">
     <h2>Home</h2>
     <h4>{{ count }}</h4>
-    <el-button type="primary" @click="increment">++</el-button>
+    <el-button type="primary" :icon="Edit" @click="increment">++</el-button>
     <SvgIcon name="user"/>
+
+    <el-button type="primary">
+      <el-icon>
+        <SvgIcon name="user" color="#fff"/>
+      </el-icon>
+      测试
+    </el-button>
   </div>
 </template>
 <script setup>
 import SvgIcon from '@/components/SvgIcon'
+import { Edit } from '@element-plus/icons-vue'
 // import { ref, reactive } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/store'
