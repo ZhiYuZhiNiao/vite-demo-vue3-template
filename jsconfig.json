@@ -1,15 +1,12 @@
 {
   "compilerOptions": {
-    "target": "ES6",
-    "allowSyntheticDefaultImports": true,
     "baseUrl": "./",
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
-    }
+      "@/*": ["src/*"]
+    },
+    /* 全局引入饿了么UI组件类型 */
+    "types": ["element-plus/global"],
+    "strictNullChecks": true
   },
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules", "dist"]
 }
