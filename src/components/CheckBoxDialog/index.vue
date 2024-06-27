@@ -57,12 +57,22 @@
 
 <script setup>
 import { computed, ref, reactive } from 'vue'
-import { useVModel } from '@/hook/useVModel.js'
 import MyCheckBox from './components/CheckBox.vue'
 import Tags from './components/Tags.vue'
-import { usePagination } from '@/hook'
+import { usePagination, useVModel } from '@/hook'
 import { useTags } from './useTags'
 
+/**
+ * @typedef {Object} Props
+ * @prop {boolean} show - 双向绑定的值, 控制对话框显示隐藏
+ * @prop {string[]} modelValue - 双向绑定的值, 勾选项的code
+ * @prop {boolean} multiple - 控制checkbox 是否多选的
+ * @prop {{label:string,value:string,disabled:string}} props - 用于checkbox 内部使用的字段, 默认值就是对应的key名
+ * @prop {(...args: any[]) => Promise<any>} reqListApi - 搜索之后的请求
+ * @prop {Record<string, any>} searchObj
+ */
+
+/** @type {Props} */
 const props = defineProps({
   show: [Boolean],
   modelValue: {
@@ -80,10 +90,6 @@ const props = defineProps({
       value: 'value',
       disabled: 'disabled'
     })
-  },
-  showListContent: {
-    type: Function,
-    default: null
   },
   reqListApi: {
     type: Function,
@@ -113,28 +119,23 @@ const { setPageCount, setTotal } = pagination
 const loading = ref(false)
 
 /**
- * @type {import('vue/dist/vue').Ref<string[]>}
+ * @type {import('vue').Ref<string[]>}
  */
 const checkedCodes = ref([])
 
-/**
- * @type {<{[key: string]: any}[]>}
- */
-const checkList = ref([])
+const checkList = ref(/** @type {Record<string, any>[]} */ ([]))
 
-/**
- * @type {import('vue/dist/vue').ComputedRef<{value: string, label: string, disabled: boolean, [key: string]?: any}[]>}
- */
 const showList = computed(() => {
-  const { props: _props, showListContent } = props
+  const { props: _props } = props
   return checkList.value.map(el => ({
-    value: el[_props.value],
-    label: el[_props.label],
-    disabled: el[_props.disabled],
-    ...(showListContent?.(el) ?? {})
+    value: /** @type {string} */ (el[_props.value]),
+    label: /** @type {string} */  (el[_props.label]),
+    disabled: !!el[_props.disabled],
+    ...el
   }))
 })
 
+// tags 就是 v-model 对应的值
 const { tags, updateTags } = useTags(props, 'modelValue', emit, showList)
 
 const onSave = () => {

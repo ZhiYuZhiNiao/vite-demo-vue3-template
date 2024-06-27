@@ -1,6 +1,12 @@
 import { useVModel } from '@/hook/useVModel'
 import { computed, toValue } from 'vue'
 
+/**
+ * @param {*} props
+ * @param {*} propsKey
+ * @param {*} emit
+ * @param {*} showList
+ */
 export function useTags(props, propsKey, emit, showList) {
   const tags = useVModel(props, propsKey, emit)
   const prevTags = computed(() => {

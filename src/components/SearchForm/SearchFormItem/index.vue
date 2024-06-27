@@ -1,7 +1,8 @@
 <template>
   <component
     :is="`el-${props.item.type}`"
-    v-bind="{ ...props.item.props, ...placeholder }"
+    v-bind="{ ...computedProps, ...placeholder }"
+    :style="props.item.type === 'select' ? { width: '190px' } : {}"
   >
     <template v-if="props.item.type === 'select'">
       <component
@@ -18,7 +19,7 @@
 <script setup>
 import { computed } from 'vue'
 // @ts-check
-/** @type {import('./type').Props} */
+/** @type {import('./indexType').Props} */
 const props = (defineProps({
   item: Object
 }))
@@ -40,7 +41,25 @@ const fieldName = computed(() => {
   return {
     label: props.item.fieldName?.label ?? 'label',
     value: props.item.fieldName?.value ?? 'value',
-    disabled: props.item.fieldName?.disabled ?? 'disabled'
+    disabled: props.item.fieldName?.disabled ?? 'disabled',
+    children: props.item.fieldName?.children ?? 'children'
   }
+})
+
+const computedProps = computed(() => {
+  const elType = props.item.type
+  const disabled = fieldName.value.disabled
+  const label = fieldName.value.label
+  const value = fieldName.value.value
+  const children = fieldName.value.children
+  let cascaderProps = props.item.props?.props ?? {}
+  cascaderProps = { ...cascaderProps, disabled, label, value, children }
+  const res = {
+    ...props.item.props
+  }
+  if (elType === 'cascader') {
+    res.props = cascaderProps
+  }
+  return res
 })
 </script>

@@ -25,3 +25,25 @@ export function list2Obj(list, propKey = 'key', propValue = 'value') {
     return init
   }, /** @type {{[k in T[K | 'key']]: T[U | 'value']}} */ ({}))
 }
+
+/**
+ * @template {Record<string, any>} T
+ * @template {keyof T} K
+ * @template {`${import('typeTool').取出字符串的第一个字符<K>}${'-'}`} U
+ * @template {import('typeTool').取出字符串第三个字符开始往后的字符<K, U>} V
+ * @param {T} obj
+ * @param {U} key
+ * @example
+ * obj = {'f-c': '哈哈', 't-name': '嘿嘿', 'p-age': '细细'}
+ * fliterAndSplitObjByKey(obj, 't-') => {'name': '嘿嘿'}
+ */
+export function fliterAndSplitObjByKey(obj, key) {
+  const result = /** @type {{[k in V]: T[K]}} */ ({})
+  for (const k of Object.keys(obj)) {
+    if (k.includes(key)) {
+      const [, _k] = k.split(`${key}`)
+      result[_k] = obj[k]
+    }
+  }
+  return result
+}

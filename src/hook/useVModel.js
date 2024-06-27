@@ -1,4 +1,4 @@
-import { computed } from 'vue'
+import { computed, getCurrentInstance } from 'vue'
 // @ts-check
 
 /**
@@ -7,10 +7,10 @@ import { computed } from 'vue'
  * @template {keyof T} K
  * @param {T} props
  * @param {K} key
- * @param {Function} emit
- * @returns
  */
-export default function useVModel(props, key, emit) {
+export default function useVModel(props, key) {
+  const context = getCurrentInstance()
+  if (!context) throw new Error('useVModel() 只能在setup内执行!')
   return computed({
     /**
      * @returns {T[K]}
@@ -20,11 +20,11 @@ export default function useVModel(props, key, emit) {
       if (Object.prototype.toString.call(target) !== '[object Object]') return target
       return new Proxy(target, {
         set(raw, k, newVal) {
-          emit(`update:${key}`, { ...raw, [k]: newVal })
+          context.emit?.(`update:${key}`, { ...raw, [k]: newVal })
           return true
         }
       })
     },
-    set(val) { emit(`update:${key}`, val) }
+    set(val) { context.emit?.(`update:${key}`, val) }
   })
 }

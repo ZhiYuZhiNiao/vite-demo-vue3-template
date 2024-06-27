@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 export const useUserStore = defineStore('user', () => {
   /* state */
@@ -8,5 +8,8 @@ export const useUserStore = defineStore('user', () => {
   function increment() {
     count.value++
   }
-  return { count, increment }
+
+  const dobule = computed(() => count.value * 2)
+
+  return { count, increment, dobule }
 })

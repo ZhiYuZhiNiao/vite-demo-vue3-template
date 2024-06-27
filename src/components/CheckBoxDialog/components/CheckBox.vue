@@ -12,25 +12,24 @@
     v-model="checkedCodes"
     v-bind="$attrs"
   >
-    <el-checkbox v-for="item in canCheckList" :key="item.value" :label="item.value">
-      {{ item.label || '' }}
+    <el-checkbox v-for="item of props.showList" :key="item.value" :label="item.value" :disabled="item.disabled">
+      {{ showLabel?.(item) ?? (item.label || '') }}
     </el-checkbox>
   </el-checkbox-group>
 </template>
 <script setup>
 import { computed, watchEffect } from 'vue'
-import { useVModel } from '@/hook/useVModel.js'
 import { useCheckBox } from './useCheckBox.js'
 
 /**
- * @typedef Props
- * @property {readonly string[]} modelValue
- * @property {readonly {[key: string | symbol], value: string | number, label: string, disabled: boolean}[]} showList
- * @property {readonly boolean} multiple
+ * @typedef {Object} Props
+ * @property {string[]} modelValue - 双向绑定的勾选项的codes
+ * @property {{[key: string]: any, value: string, label: string, disabled: boolean}[]} showList
+ * @property {boolean} multiple
  */
 
 /**
- * @type {Props}
+ * @type {Readonly<Props>}
  */
 const props = defineProps({
   modelValue: {
@@ -44,18 +43,27 @@ const props = defineProps({
   multiple: {
     type: Boolean,
     default: true
+  },
+  showLabel: {
+    type: Function,
+    default: null
   }
 })
 
-const emit = defineEmits(['update:modelValue'])
+/**
+ * @typedef {{
+ *  (e: 'update:modelValue', value: Props['modelValue']): void
+ *  (e: 'checkAll', val: boolean, list: Props['showList']): void
+ * }} Emit
+ */
 
-// 这个放在use里面更好把, 不然不知道状态在哪里修改了
-const checkedCodes = useVModel(props, 'modelValue', emit)
+/** @type {Emit} */
+const emit = defineEmits(['update:modelValue', 'checkAll'])
 
 /* 全选与否的状态是根据当前可选项来的 */
 const canCheckList = computed(() => props.showList.filter(el => !el.disabled))
 
-const { isCheckAll, isIndeterminate, disableCheckAllBtn, updateCheckAllBtnState, onCheckAllChange } = useCheckBox(checkedCodes, canCheckList, emit)
+const { checkedCodes, isCheckAll, isIndeterminate, disableCheckAllBtn, updateCheckAllBtnState, onCheckAllChange } = useCheckBox(props, canCheckList, emit)
 
 /* canCheckList or checkedCodes 变化 手动更新全选按钮的状态 */
 watchEffect(updateCheckAllBtnState)

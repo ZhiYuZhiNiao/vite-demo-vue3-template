@@ -1,16 +1,14 @@
 import { computed, ref } from 'vue'
+import { useVModel } from '@/hook'
 
 /**
- * @template T
- * @typedef {import('vue/dist/vue').ComputedRef<T>} ComputedRef
- */
-
-/**
- * @param {import('vue/dist/vue').WritableComputedRef<string[]>} checkedCodes
- * @param {ComputedRef<{[key: string | symbol], value: string | number, label: string, disabled: boolean}[]>} canCheckList
+ * @param {import('./CheckBox.vue').Props} props
+ * @param {import('./CheckBox.vue').Props['showList']} canCheckList
+ * @param {import('./CheckBox.vue').Emit} emit
  * @returns
  */
-export function useCheckBox(checkedCodes, canCheckList, emit) {
+export function useCheckBox(props, canCheckList, emit) {
+  const checkedCodes = useVModel(props, 'modelValue', emit)
   const isCheckAll = ref(false)
   const isIndeterminate = ref(false)
   const disableCheckAllBtn = computed(() => !canCheckList.value.length)
@@ -37,6 +35,7 @@ export function useCheckBox(checkedCodes, canCheckList, emit) {
     isCheckAll,
     isIndeterminate,
     disableCheckAllBtn,
+    checkedCodes,
     updateCheckAllBtnState,
     onCheckAllChange
   }
