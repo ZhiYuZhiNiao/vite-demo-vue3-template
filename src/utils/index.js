@@ -47,3 +47,33 @@ export function fliterAndSplitObjByKey(obj, key) {
   }
   return result
 }
+
+
+/**
+ * @description 类似 Object.assign (不同点在于对象内部的 get set 都可以复制过去)
+ * @template  T
+ * @template {any[]} S
+ * @param {T} target 
+ * @param  {S} sources 
+ */
+export function completeAssign(target, ...sources) {
+  sources.forEach((source) => {
+    const descriptors = Object.keys(source).reduce((descriptors, key) => {
+      descriptors[key] = Object.getOwnPropertyDescriptor(source, key)
+      return descriptors
+    }, {})
+
+    // 默认情况下，Object.assign 也会复制可枚举的 Symbol 属性
+    Object.getOwnPropertySymbols(source).forEach((sym) => {
+      const descriptor = Object.getOwnPropertyDescriptor(source, sym)
+      if (descriptor?.enumerable) {
+        descriptors[sym] = descriptor
+      }
+    })
+    Object.defineProperties(target, descriptors);
+  })
+  // @ts-ignore
+  return /** @type {import('typeTool').ShallowExpand<import('typeTool').Merges<T, S>>} */(target)
+}
+
+const obj = completeAssign({age: 1}, {name: ''}, {age: ''}, {name: 1}, {get name() {return ''}})

@@ -16,9 +16,9 @@ export default defineConfig({
   plugins: [
     vue(),
     // eslint
-    eslintPlugin({
-      include: ['src/**/*.js', 'src/**/*.vue', 'src/*.js', 'src/*.vue']
-    }),
+    // eslintPlugin({
+    //   include: ['src/**/*.js', 'src/**/*.vue', 'src/*.js', 'src/*.vue']
+    // }),
     // SvgIcon
     createSvgIconsPlugin({
       // Specify the icon folder to be cached

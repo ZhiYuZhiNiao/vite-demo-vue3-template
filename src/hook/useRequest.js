@@ -1,66 +1,196 @@
-// eslint-disable-next-line no-unused-vars
-import { reactive, ref, watch, toRefs, watchEffect } from 'vue'
+// @ts-check
+import { GetPageList, testReqFn2, Add } from '@/api/Goods'
+import { reactive, toRefs, unref, ref, watch } from 'vue'
 
 /**
- *
- * @param {(...args) => Promise} reqFn
- * @param {{
- *  auto: boolean,
- *  deps: Array | boolean,
- *  onSuccess: (res: object) => void,
- *  onError: (err: object) => void,
- *  onFinish: ({ res: object, err: object }) => void
- *  } | undefined
- * } opts
- * @property {boolean} auto 是否自动发起请求
- * @returns
+ * @template [InitDataList=undefined]
+ * @template [FormatReturnType=undefined]
+ * @template [DataList=undefined]
+ * @typedef {Object} Options
+ * @prop {MaybeRef<Params>} [reqParams] - 请求携带得参数 可以是Ref类型
+ * @prop {InitDataList} [initDataList] - dataList的初始值, 可以是Ref类型
+ * @prop {MaybeRef<boolean>} [immediate=true] - 是否执行useRequest的时候立即发送请求, 默认值true, 可以是Ref类型
+ * @prop {any[]} [deps] - 依赖项, 存放响应式依赖的数组 某个依赖发生变化则再次执行run方法发送请求
+ * @prop {(dataList: FormatDataList<DataList, UnwrapRef<InitDataList>, undefined>) => FormatReturnType} [formatDataListFn] - 不管请求成功还是失败都会调用该方法
+ * - 该函数的返回值会赋值给 resData里面的 dataList (如果该函数返回 null or undefined 则返回值不会赋值给 dataList)
+ * @prop {() => void} [onSuccess]
+ * @prop {() => void} [onError]
+ * @prop {() => void} [onFinally]
  */
-export default function(reqFn, opts) {
-  const { auto = true, deps, onSuccess, onError, onFinish } = opts ?? {}
-  const state = reactive({
+
+/**
+ * @template {(...args: any[]) => Promise<ResData<unknown>>} ReqFn
+ * @template [InitDataList=undefined]
+ * @template [FormatReturnType=undefined]
+ * @template [DataList=取出ReqFn中的dataList类型<ReqFn>]
+ * @param {ReqFn} reqFn
+ * @param {Options<InitDataList, FormatReturnType, DataList>} [options]
+ */
+export default function useRequest(reqFn, options) {
+  options = options ?? {}
+  const { initDataList, formatDataListFn, onSuccess, onError, onFinally } = options
+  const reqParams = unref(options.reqParams)
+  const immediate = unref(options.immediate ?? true)
+  const deps = unref(options.deps ?? [])
+
+  /** @type {ResData<FormatDataList<DataList, UnwrapRef<InitDataList>, FormatReturnType>> & {loading: boolean, isError: boolean}} */
+  // @ts-ignore
+  const resData = (reactive({
+    dataList: initDataList,
     loading: false,
-    res: undefined,
-    err: undefined
+    isError: false
+  }))
+
+  let abortController = /** @type {AbortController | null} */(null)
+
+  /**
+   * @description 手动执行发送请求, 若传递参数则该参数会作为请求参数(若未传递则使用options中的-reqParams)
+   * @param {MaybeRef<Params>} [params] 请求携带的参数 可以是Ref类型
+   */
+  const run = async (params) => {
+    // console.log('run, 执行啦啦啦')
+    try {
+      params = unref(params) ?? reqParams
+      abortController = new AbortController()
+      resData.loading = true
+      const _resData = /** @type {ResData<DataList> | null} */(await reqFn(params, abortController.signal))
+      if (!_resData || _resData?.dataList === null || _resData?.dataList === undefined) {
+        console.error('console.error: 后端返回的数据有点问题!!')
+      }
+      resData.isError = false
+      Object.assign(resData, _resData)
+      // @ts-ignore
+      resData.dataList = formatDataListFn?.(resData.dataList) ?? resData.dataList
+      onSuccess?.()
+      return Promise.resolve(resData.dataList)
+    } catch (error) {
+      resData.isError = true
+      // @ts-ignore
+      resData.dataList = formatDataListFn?.(resData.dataList) ?? resData.dataList
+      onError?.()
+      return Promise.reject(error)
+    } finally {
+      resData.loading = false
+      onFinally?.()
+    }
+  }
+
+
+  /**
+   * @description 取消当前正在发送的请求
+   * @param {string} [reason]
+   */
+  const cancel = (reason) => {
+    /*  当 abort() 被调用时，fetch() promise 将会抛出 DOMException 类型的 Error（名称为 AbortError） (就是如果没有传递reason, 默认会抛出的这个错) */
+    abortController?.abort(reason)
+  }
+
+
+  watch(deps.map(unref), () => {
+    run()
+  }, {
+    deep: true,
+    immediate
   })
 
-  const run = async (...args) => {
-    console.log('args', args)
-    state.loading = true
-    console.log('loading = true')
-    let res
-    try {
-      res = await reqFn(...args)
-      state.res = res
-      onSuccess?.(res)
-      return state.res
-    } catch (err) {
-      state.err = err
-      onError?.(err)
-      return state.err
-    } finally {
-      state.loading = false
-      onFinish?.({ res, err: state.err })
-      console.log('loading = false')
-    }
-  }
-
-  // 如果 deps 传入 true, 则自动使用请求参数作为依赖进行监听
-  if (auto) {
-    if (!Array.isArray(deps) && deps === true) {
-      watchEffect(run)
-    } else {
-      watch(deps, () => {
-        if (!auto) return
-        run()
-      }, { deep: true, immediate: true })
-    }
-  }
-
-  const cancel = () => {}
-
   return {
-    ...toRefs(state),
+    ...toRefs(resData),
     run,
     cancel
   }
 }
+
+
+/* test------------------------------------------------------ */
+
+// const resData = reactive(useRequest(testReqFn2, {
+//   initDataList: [],
+// }))
+
+// const initDataList = {
+//   obj: {
+//     a: ref(1),
+//     ob: {
+//       c: ref('')
+//     }
+//   }
+// }
+
+// const resData2 = reactive(useRequest(GetPageList, {
+//   initDataList: initDataList,
+//   formatDataListFn(dataList) {
+//     if ('obj' in dataList) {
+//       dataList.obj.ob.c
+//     }
+//   },
+//   immediate: false
+// }))
+
+// ;( async() => {
+//   const dataList = await resData2.run()
+// })()
+
+// const { dataList } = reactive(useRequest(GetPageList, {
+//   formatDataListFn(data) {
+//     return data?._sBatching ?? []
+//   }
+// }))
+
+
+
+
+/**
+ * @template [T=undefined]
+ * @typedef {import('@/utils/request').ResData<T>} ResData
+ */
+
+/**
+ * @typedef {Record<string, any> | any[]} Params - 请求参数类型
+ */
+
+
+/**
+ * @template T
+ * @typedef {import('vue').MaybeRef<T>} MaybeRef
+ */
+
+/**
+ * @template T
+ * @typedef {import('vue').UnwrapRef<T>} UnwrapRef
+ */
+
+
+/**
+ * @template T
+ * @typedef {T extends (...args: any[]) => Promise<ResData<infer DataList>> ? DataList : any} 取出ReqFn中的dataList类型
+ */
+
+/**
+ * @template T
+ * @typedef {import('typeTool').CheckAny<T>} CheckAny
+ */
+
+/**
+ * @template DataList
+ * @template DefaultValue
+ * @template FormatFnReturn
+ * @template [G = DataList | DefaultValue]
+ * @template [_DataList=CheckAny<DataList> extends '是Any' 
+    ? DefaultValue extends undefined 
+    ? any 
+    : G 
+    : DefaultValue extends undefined 
+    ? Exclude<DataList, null> | undefined 
+    : DataList extends any[] 
+    ? DefaultValue extends never[] 
+    ? Exclude<DataList, null> 
+    : G 
+    : DataList extends Record<string, any> 
+    ? DefaultValue extends any[] 
+    ? G 
+    : {} extends DefaultValue
+    ? Partial<Exclude<DataList, null>> 
+    : G 
+    : G]
+ * @typedef {FormatFnReturn extends undefined | null | void ? _DataList : FormatFnReturn} FormatDataList
+ */
