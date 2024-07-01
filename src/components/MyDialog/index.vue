@@ -36,22 +36,22 @@ const props = defineProps({
   code: String
 })
 
-
 const emit = defineEmits(['success'])
 
 const rules = createRules()
 const { formModel, setFormRef, show, loading, onSave } = useDialog({
-  initFormModel: createInitModel(),
-  Get, Add, Edit,
-  beforeValidate() {
-    return false
+  initFormModel: {
+    sName: '',
+    sFace: '',
+    get name() {
+      return this.sName + 'zz'
+    }
   },
-  afterValidate() {
-    return ref({ code: ''})
-  },
+  Add, 
+  Edit,
+  Get
 })
 
-formModel.value.list
 
 // const resData = reactive(useDialog({
 //   initFormModel: createInitModel(),

@@ -55,7 +55,7 @@ export default function useRequest(reqFn, options) {
       resData.loading = true
       const _resData = /** @type {ResData<DataList> | null} */(await reqFn(params, abortController.signal))
       if (!_resData || _resData?.dataList === null || _resData?.dataList === undefined) {
-        console.error('console.error: 后端返回的数据有点问题!!')
+        console.error('console.error: 后端返回的 resData or dataList 为 null !!')
       }
       resData.isError = false
       Object.assign(resData, _resData)
@@ -103,38 +103,38 @@ export default function useRequest(reqFn, options) {
 
 /* test------------------------------------------------------ */
 
-// const resData = reactive(useRequest(testReqFn2, {
-//   initDataList: [],
-// }))
+const resData = reactive(useRequest(testReqFn2, {
+  initDataList: [],
+}))
 
-// const initDataList = {
-//   obj: {
-//     a: ref(1),
-//     ob: {
-//       c: ref('')
-//     }
-//   }
-// }
+const initDataList = {
+  obj: {
+    a: ref(1),
+    ob: {
+      c: ref('')
+    }
+  }
+}
 
-// const resData2 = reactive(useRequest(GetPageList, {
-//   initDataList: initDataList,
-//   formatDataListFn(dataList) {
-//     if ('obj' in dataList) {
-//       dataList.obj.ob.c
-//     }
-//   },
-//   immediate: false
-// }))
+const resData2 = reactive(useRequest(GetPageList, {
+  initDataList: initDataList,
+  formatDataListFn(dataList) {
+    if ('obj' in dataList) {
+      dataList.obj.ob.c
+    }
+  },
+  immediate: false
+}))
 
-// ;( async() => {
-//   const dataList = await resData2.run()
-// })()
+;( async() => {
+  const dataList = await resData2.run()
+})()
 
-// const { dataList } = reactive(useRequest(GetPageList, {
-//   formatDataListFn(data) {
-//     return data?._sBatching ?? []
-//   }
-// }))
+const { dataList } = reactive(useRequest(GetPageList, {
+  formatDataListFn(data) {
+    return data?._sBatching ?? []
+  }
+}))
 
 
 
