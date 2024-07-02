@@ -40,10 +40,14 @@ const onClick = () => {
 
 
 const testData2 = reactive({
-  name: '张三'
+  name: '张三',
+  obj: {
+    name: '嘿嘿'
+  }
 })
 
 testData2.name = ref('李四')
+testData2.obj = ref({name: '哈哈'}).value
 </script>
 <style lang="scss" scoped>
 .app-container {

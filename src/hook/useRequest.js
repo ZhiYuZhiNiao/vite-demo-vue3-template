@@ -8,11 +8,11 @@ import { reactive, toRefs, unref, ref, watch } from 'vue'
  * @template [DataList=undefined]
  * @typedef {Object} Options
  * @prop {MaybeRef<Params>} [reqParams] - 请求携带得参数 可以是Ref类型
- * @prop {InitDataList} [initDataList] - dataList的初始值, 可以是Ref类型
+ * @prop {InitDataList} [initDataList] - dataList的初始值, 可以是Ref类型(会被自动解包)
  * @prop {MaybeRef<boolean>} [immediate=true] - 是否执行useRequest的时候立即发送请求, 默认值true, 可以是Ref类型
  * @prop {any[]} [deps] - 依赖项, 存放响应式依赖的数组 某个依赖发生变化则再次执行run方法发送请求
  * @prop {(dataList: FormatDataList<DataList, UnwrapRef<InitDataList>, undefined>) => FormatReturnType} [formatDataListFn] - 不管请求成功还是失败都会调用该方法
- * - 该函数的返回值会赋值给 resData里面的 dataList (如果该函数返回 null or undefined 则返回值不会赋值给 dataList)
+ * - 该函数的返回值会赋值给 resData里面的 dataList; 如果函数返回值为undefined or null, 那么不会进行赋值操作. 该函数返回值类型也会被解包
  * @prop {() => void} [onSuccess]
  * @prop {() => void} [onError]
  * @prop {() => void} [onFinally]
@@ -30,8 +30,8 @@ export default function useRequest(reqFn, options) {
   options = options ?? {}
   const { initDataList, formatDataListFn, onSuccess, onError, onFinally } = options
   const reqParams = unref(options.reqParams)
-  const immediate = unref(options.immediate ?? true)
-  const deps = unref(options.deps ?? [])
+  const immediate = unref(options.immediate) ?? true
+  const deps = unref(options.deps) ?? []
 
   /** @type {ResData<FormatDataList<DataList, UnwrapRef<InitDataList>, UnwrapRef<FormatReturnType>>> & {loading: boolean, isError: boolean}} */
   // @ts-ignore
@@ -60,14 +60,14 @@ export default function useRequest(reqFn, options) {
       resData.isError = false
       Object.assign(resData, _resData)
       // @ts-ignore
-      resData.dataList = formatDataListFn?.(resData.dataList) ?? resData.dataList
+      resData.dataList = unref(formatDataListFn?.(resData.dataList)) ?? resData.dataList
       onSuccess?.()
       return Promise.resolve(resData.dataList)
     } catch (error) {
       resData.isError = true
       // console.error(error)
       // @ts-ignore
-      resData.dataList = formatDataListFn?.(resData.dataList) ?? resData.dataList
+      resData.dataList = unref(formatDataListFn?.(resData.dataList))  ?? resData.dataList
       onError?.()
       return Promise.reject(error)
     } finally {
@@ -116,9 +116,7 @@ const { dataList: d2 } = (useRequest(GetPageList, {
   initDataList: initDataList,
   formatDataListFn(dataList) {
     return {
-      obj: {
-        a: ref(1)
-      }
+      name: ''
     }
   },
   immediate: false

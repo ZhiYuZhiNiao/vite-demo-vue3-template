@@ -67,13 +67,15 @@ const testData = ref({
   count: 0
 })
 
-const { dataList: opts } = useOptions(testReqFn2, {
+const resData2 = reactive(useOptions(testReqFn2, {
   props: {
     label: 'sName',
     value: 'code'
   },
   deps: [testData]
-})
+}))
+
+
 
 // console.log('opts=', opts)
 
