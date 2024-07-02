@@ -15,7 +15,7 @@
 
 <script setup>
 import MyDialog from '@/components/MyDialog/index.vue'
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 
 const dialog = reactive({
   show: false,
@@ -34,8 +34,16 @@ console.log('person = ', person)
 
 const onClick = () => {
   dialog.show = true
-  // console.log('testData = ', testData)
+  console.log('testData2.name = ', testData2.name)
+  console.log('testData2.name.value = ', testData2.name.value)
 }
+
+
+const testData2 = reactive({
+  name: '张三'
+})
+
+testData2.name = ref('李四')
 </script>
 <style lang="scss" scoped>
 .app-container {

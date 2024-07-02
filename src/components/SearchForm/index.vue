@@ -47,7 +47,7 @@ const props = (defineProps({
  */
 const emit = defineEmits(['update:modelValue', 'onSearch', 'onClear'])
 
-const _modelValue = useVModel(props, 'modelValue', emit)
+const _modelValue = useVModel(props, 'modelValue')
 
 </script>
 <style lang="scss" scoped>

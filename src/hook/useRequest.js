@@ -33,7 +33,7 @@ export default function useRequest(reqFn, options) {
   const immediate = unref(options.immediate ?? true)
   const deps = unref(options.deps ?? [])
 
-  /** @type {ResData<FormatDataList<DataList, UnwrapRef<InitDataList>, FormatReturnType>> & {loading: boolean, isError: boolean}} */
+  /** @type {ResData<FormatDataList<DataList, UnwrapRef<InitDataList>, UnwrapRef<FormatReturnType>>> & {loading: boolean, isError: boolean}} */
   // @ts-ignore
   const resData = (reactive({
     dataList: initDataList,
@@ -65,6 +65,7 @@ export default function useRequest(reqFn, options) {
       return Promise.resolve(resData.dataList)
     } catch (error) {
       resData.isError = true
+      // console.error(error)
       // @ts-ignore
       resData.dataList = formatDataListFn?.(resData.dataList) ?? resData.dataList
       onError?.()
@@ -108,26 +109,23 @@ const resData = reactive(useRequest(testReqFn2, {
 }))
 
 const initDataList = {
-  obj: {
-    a: ref(1),
-    ob: {
-      c: ref('')
-    }
-  }
+  name: ''
 }
 
-const resData2 = reactive(useRequest(GetPageList, {
+const { dataList: d2 } = (useRequest(GetPageList, {
   initDataList: initDataList,
   formatDataListFn(dataList) {
-    if ('obj' in dataList) {
-      dataList.obj.ob.c
+    return {
+      obj: {
+        a: ref(1)
+      }
     }
   },
   immediate: false
 }))
 
 ;( async() => {
-  const dataList = await resData2.run()
+  // const dataList = await resData2.run()
 })()
 
 const { dataList } = reactive(useRequest(GetPageList, {
