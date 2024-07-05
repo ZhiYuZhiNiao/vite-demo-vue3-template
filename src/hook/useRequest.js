@@ -108,6 +108,7 @@ const resData = reactive(useRequest(testReqFn2, {
   initDataList: [],
 }))
 
+
 const initDataList = {
   name: ''
 }
@@ -115,12 +116,15 @@ const initDataList = {
 const { dataList: d2 } = (useRequest(GetPageList, {
   initDataList: initDataList,
   formatDataListFn(dataList) {
-    return {
-      name: ''
-    }
+
   },
   immediate: false
 }))
+
+
+if ('sName' in d2.value) {
+  d2.value
+}
 
 ;( async() => {
   // const dataList = await resData2.run()

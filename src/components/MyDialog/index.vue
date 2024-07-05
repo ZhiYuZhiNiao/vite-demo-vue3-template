@@ -31,7 +31,6 @@ import { Get, Add, Edit, testReqFn2 } from '@/api/Goods'
 // import { completeAssign } from '@/utils'
 import { reactive, ref } from 'vue'
 
-
 const props = defineProps({
   code: String
 })
