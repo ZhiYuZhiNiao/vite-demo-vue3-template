@@ -16,19 +16,20 @@
 
 <script setup>
 import Vuedraggable from 'vuedraggable'
-import { useControls } from './useControls'
+import { useControls } from '@/store'
+import { useVModel } from '@/hook'
+
+const { createControls } = useControls()
+console.log('createControls', createControls)
 
 const props = defineProps({
   modelValue: {
-    type: /** @type {import('vue').PropType<import('./useControls').Controls>} */(Array),
+    type: /** @type {import('vue').PropType<ReturnType<typeof createControls>>} */(Array),
     required: true
   }
 })
 
-// eslint-disable-next-line no-unused-vars
-const emit = defineEmits(['update:modelValue'])
-
-const { list, onStart, onEnd } = useControls(props, 'modelValue')
+const list = useVModel(props, 'modelValue')
 </script>
 
 <style lang="scss" scoped>

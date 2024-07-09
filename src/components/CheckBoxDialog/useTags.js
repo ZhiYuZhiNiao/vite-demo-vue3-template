@@ -1,4 +1,4 @@
-import { useVModel } from '@/hook/useVModel'
+import { useVModel } from '@/hook/utils/useVModel'
 import { computed, toValue } from 'vue'
 
 /**

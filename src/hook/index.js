@@ -1,7 +1,15 @@
-import usePagination from './usePagination'
-import useVModel from './useVModel'
+import useVModel from '@/hook/utils/useVModel'
+import useRequest from '@/hook/utils/useRequest'
+import usePagination from '@/hook/components/usePagination'
+import useDialog from '@/hook/components/useDialog'
+import useOptions from '@/hook/components/useOptions'
+import useCheckBox from '@/hook/components/useCheckBox'
 
 export {
+  useVModel,
+  useRequest,
+  useDialog,
   usePagination,
-  useVModel
+  useOptions,
+  useCheckBox
 }

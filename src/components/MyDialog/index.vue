@@ -24,42 +24,38 @@
 
 <script setup>
 // @ts-check
-import useDialog from '@/hook/useDialog'
+import { useDialog, useOptions } from '@/hook'
 // import useRequest from '@/hook/useRequest'
-import useOptions from '@/hook/useOptions'
 import { Get, Add, Edit, testReqFn2 } from '@/api/Goods'
 // import { completeAssign } from '@/utils'
 import { reactive, ref } from 'vue'
 
+// eslint-disable-next-line no-unused-vars
 const props = defineProps({
   code: String
 })
 
+// eslint-disable-next-line no-unused-vars
 const emit = defineEmits(['success'])
 
 const rules = createRules()
 const { formModel, setFormRef, show, loading, onSave } = useDialog({
   initFormModel: {
     sName: '',
-    sFace: '',
-    get name() {
-      return this.sName + 'zz'
-    }
+    sFace: ''
   },
-  Add, 
+  Add,
   Edit,
   Get
 })
-
 
 // const resData = reactive(useDialog({
 //   initFormModel: createInitModel(),
 //   Get, Add, Edit
 // }))
 
-
 if ('code' in formModel.value) {
-  formModel.value
+  //
 }
 
 const testData = ref({
@@ -74,7 +70,7 @@ const resData2 = reactive(useOptions(testReqFn2, {
   deps: [testData]
 }))
 
-
+console.log(resData2)
 
 // console.log('opts=', opts)
 
@@ -85,7 +81,6 @@ const resData2 = reactive(useOptions(testReqFn2, {
 //   }
 // })
 
-
 const onTest = () => {
   testData.value.count++
 }
@@ -93,17 +88,19 @@ const onTest = () => {
 function createInitModel() {
   return {
     sName: '',
-    list: [{age: 1, name: ''}],
+    list: [{ age: 1, name: '' }],
     get name() {
       return this.sName + '张三'
     }
   }
 }
 
+console.log(createInitModel)
+
 function createRules() {
   return /** @type {import('element-plus').FormRules<ReturnType<typeof createInitModel>>} */ ({
     sName: [
-      { required: true, message: '请输入', trigger: 'blur'}
+      { required: true, message: '请输入', trigger: 'blur' }
     ]
   })
 }
@@ -114,3 +111,4 @@ function createRules() {
   font-size: 18px;
 }
 </style>
+@/hook/components/useDialog@/hook/components/useOptions

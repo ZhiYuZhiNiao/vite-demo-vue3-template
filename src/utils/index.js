@@ -9,22 +9,25 @@ export const sleep = (time) => new Promise((resolve) => setTimeout(resolve, time
 /**
  * @description 根据数组项目里面的属性来转成一个对象
  * @template {Record<string, any>} T
- * @template {keyof T} [K='key']
- * @template {keyof T} [U='value']
+ * @template {keyof T} [K='value']
  * @param {T[]} list
- * @param {K | 'key'} propKey
- * @param {U | 'value'} propValue
- * @example
- * [{key: 'name', value: '张三'}, {key: 'age', value: 14}] => { name: '张三', age: 14 }
+ * @param {K} [propKey]
  */
-export function list2Obj(list, propKey = 'key', propValue = 'value') {
+// @ts-ignore
+export function list2Obj(list, propKey = 'value') {
   return list.reduce((init, cur) => {
     const k = cur[propKey]
-    const v = cur[propValue]
+    const v = cur
     init[k] = v
     return init
-  }, /** @type {{[k in T[K | 'key']]: T[U | 'value']}} */ ({}))
+  }, /** @type {{[k in T[K]]: T}} */ ({}))
 }
+
+// const obj = list2Obj([
+//   /** @type {const} */({ value: '0', label: '哈哈0' }),
+//   /** @type {const} */({ value: '1', label: '哈哈1' }),
+//   /** @type {const} */({ value: '2', label: '哈哈2' })
+// ])
 
 /**
  * @template {Record<string, any>} T
@@ -48,13 +51,12 @@ export function fliterAndSplitObjByKey(obj, key) {
   return result
 }
 
-
 /**
  * @description 类似 Object.assign (不同点在于对象内部的 get set 都可以复制过去)
  * @template  T
  * @template {any[]} S
- * @param {T} target 
- * @param  {S} sources 
+ * @param {T} target
+ * @param  {S} sources
  */
 export function completeAssign(target, ...sources) {
   sources.forEach((source) => {
@@ -70,10 +72,17 @@ export function completeAssign(target, ...sources) {
         descriptors[sym] = descriptor
       }
     })
-    Object.defineProperties(target, descriptors);
+    Object.defineProperties(target, descriptors)
   })
   // @ts-ignore
   return /** @type {import('typeTool').ShallowExpand<import('typeTool').Merges<T, S>>} */(target)
 }
 
-const obj = completeAssign({age: 1}, {name: ''}, {age: ''}, {name: 1}, {get name() {return ''}})
+/**
+ * @description 去除联合类型中的 null or undefined类型
+ * @template T
+ * @param {T} value
+ * @returns {NonNullable<T>}
+ */
+// @ts-ignore
+export const notNullOrUndefined = value => value

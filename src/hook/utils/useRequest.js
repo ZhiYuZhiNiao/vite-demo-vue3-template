@@ -1,6 +1,6 @@
 // @ts-check
-import { GetPageList, testReqFn2, Add } from '@/api/Goods'
-import { reactive, toRefs, unref, ref, watch } from 'vue'
+import { reactive, toRefs, unref, watch } from 'vue'
+// import { GetPageList, testReqFn2, Add } from '@/api/Goods'
 
 /**
  * @template [InitDataList=undefined]
@@ -67,7 +67,7 @@ export default function useRequest(reqFn, options) {
       resData.isError = true
       // console.error(error)
       // @ts-ignore
-      resData.dataList = unref(formatDataListFn?.(resData.dataList))  ?? resData.dataList
+      resData.dataList = unref(formatDataListFn?.(resData.dataList)) ?? resData.dataList
       onError?.()
       return Promise.reject(error)
     } finally {
@@ -75,7 +75,6 @@ export default function useRequest(reqFn, options) {
       onFinally?.()
     }
   }
-
 
   /**
    * @description 取消当前正在发送的请求
@@ -85,7 +84,6 @@ export default function useRequest(reqFn, options) {
     /*  当 abort() 被调用时，fetch() promise 将会抛出 DOMException 类型的 Error（名称为 AbortError） (就是如果没有传递reason, 默认会抛出的这个错) */
     abortController?.abort(reason)
   }
-
 
   watch(deps.map(unref), () => {
     run()
@@ -101,43 +99,35 @@ export default function useRequest(reqFn, options) {
   }
 }
 
-
 /* test------------------------------------------------------ */
 
-const resData = reactive(useRequest(testReqFn2, {
-  initDataList: [],
-}))
+// const resData = reactive(useRequest(testReqFn2, {
+//   initDataList: []
+// }))
 
+// const initDataList = {
+//   name: ''
+// }
 
-const initDataList = {
-  name: ''
-}
+// console.log(resData)
 
-const { dataList: d2 } = (useRequest(GetPageList, {
-  initDataList: initDataList,
-  formatDataListFn(dataList) {
+// const { dataList: d2 } = (useRequest(GetPageList, {
+//   initDataList,
+//   formatDataListFn(dataList) {
 
-  },
-  immediate: false
-}))
+//   },
+//   immediate: false
+// }))
 
+// console.log(d2)
 
-if ('sName' in d2.value) {
-  d2.value
-}
+// const { dataList } = reactive(useRequest(GetPageList, {
+//   formatDataListFn(data) {
+//     return data?._sBatching ?? []
+//   }
+// }))
 
-;( async() => {
-  // const dataList = await resData2.run()
-})()
-
-const { dataList } = reactive(useRequest(GetPageList, {
-  formatDataListFn(data) {
-    return data?._sBatching ?? []
-  }
-}))
-
-
-
+// console.log(dataList)
 
 /**
  * @template [T=undefined]
@@ -148,7 +138,6 @@ const { dataList } = reactive(useRequest(GetPageList, {
  * @typedef {Record<string, any> | any[]} Params - 请求参数类型
  */
 
-
 /**
  * @template T
  * @typedef {import('vue').MaybeRef<T>} MaybeRef
@@ -158,7 +147,6 @@ const { dataList } = reactive(useRequest(GetPageList, {
  * @template T
  * @typedef {import('vue').UnwrapRef<T>} UnwrapRef
  */
-
 
 /**
  * @template T
@@ -175,22 +163,22 @@ const { dataList } = reactive(useRequest(GetPageList, {
  * @template DefaultValue
  * @template FormatFnReturn
  * @template [G = DataList | DefaultValue]
- * @template [_DataList=CheckAny<DataList> extends '是Any' 
-    ? DefaultValue extends undefined 
-    ? any 
-    : G 
-    : DefaultValue extends undefined 
-    ? Exclude<DataList, null> | undefined 
-    : DataList extends any[] 
-    ? DefaultValue extends never[] 
-    ? Exclude<DataList, null> 
-    : G 
-    : DataList extends Record<string, any> 
-    ? DefaultValue extends any[] 
-    ? G 
+ * @template [_DataList=CheckAny<DataList> extends '是Any'
+    ? DefaultValue extends undefined
+    ? any
+    : G
+    : DefaultValue extends undefined
+    ? Exclude<DataList, null> | undefined
+    : DataList extends any[]
+    ? DefaultValue extends never[]
+    ? Exclude<DataList, null>
+    : G
+    : DataList extends Record<string, any>
+    ? DefaultValue extends any[]
+    ? G
     : {} extends DefaultValue
-    ? Partial<Exclude<DataList, null>> 
-    : G 
+    ? Partial<Exclude<DataList, null>>
+    : G
     : G]
  * @typedef {FormatFnReturn extends undefined | null | void ? _DataList : FormatFnReturn} FormatDataList
  */

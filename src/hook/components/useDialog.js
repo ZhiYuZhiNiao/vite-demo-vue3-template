@@ -1,5 +1,5 @@
 // @ts-check
-import useRequest from './useRequest'
+import useRequest from '@/hook/utils/useRequest'
 import { reactive, toRefs, computed, unref, getCurrentInstance } from 'vue'
 import { completeAssign } from '@/utils'
 import { ElMessage } from 'element-plus'
@@ -17,7 +17,6 @@ import { ElMessage } from 'element-plus'
  * @prop {() => boolean | Promise<boolean>} [afterValidate] - 表单校验之后的校验方法 返回值是boolean, 如果返回false, 则不会执行后续操作
  * @prop {() => import('vue').MaybeRef<Record<string, any>>} [beforeSaveFormatReqParams] - 通过验证之后, 调用保存接口之前会执行该方法, 此方法的返回值(可以是Ref类型)会作为最终请求参数
 */
-
 
 /**
  * @template {import('vue').MaybeRef<Record<string, any>>} InitFormModel
@@ -57,7 +56,6 @@ export default function useDialog(options) {
 
   const loading = computed(() => [unref(getState.loading), unref(saveState.loading)].some(Boolean))
 
-
   /**
    * @description 保存事件
    */
@@ -76,8 +74,7 @@ export default function useDialog(options) {
   }
 
   /**
-   * 
-   * @param {(() => boolean | Promise<boolean>)[]} fns 
+   * @param {(() => boolean | Promise<boolean>)[]} fns
    */
   async function validate(fns) {
     let isPass = true
@@ -107,9 +104,10 @@ export default function useDialog(options) {
  */
 function handleGet(initFormModel, code, getReqFn) {
   // code 和 get 接口同时都存在才会调用get 接口， 否则使用传入的 initFormModel
-  if (!getReqFn || !code) getReqFn = /** @type {GetReqFn} */ ((params) => Promise.resolve({ dataList: initFormModel }))
+  // eslint-disable-next-line no-extra-parens
+  if (!getReqFn || !code) getReqFn = /** @type {GetReqFn} */((params) => Promise.resolve({ dataList: initFormModel }))
   const { dataList, loading } = useRequest(getReqFn, {
-    initDataList: initFormModel, 
+    initDataList: initFormModel,
     reqParams: { code },
     /* get的时候进行赋值, 最后这个函数return 出去的值, 会被赋值到 useRequest 的返回值的 dataList 里面 */
     formatDataListFn(data) {
@@ -121,11 +119,7 @@ function handleGet(initFormModel, code, getReqFn) {
   }
 }
 
-
-
-
 /**
  * @template T
  * @typedef {import('@/utils/request').ResData<T>} ResData
  */
-

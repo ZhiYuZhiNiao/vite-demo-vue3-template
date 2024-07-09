@@ -14,10 +14,11 @@
 
 <script setup>
 import Controls from './Controls/index.vue'
-import { createControlList } from './Controls/useControls'
-import { ref } from 'vue'
+import { useControls } from '@/store'
+import { storeToRefs } from 'pinia'
 
-const controls = ref(createControlList())
+const { controls } = storeToRefs(useControls())
+
 </script>
 
 <style lang="scss" scoped>

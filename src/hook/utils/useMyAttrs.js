@@ -1,9 +1,9 @@
 import { useAttrs } from 'vue'
 /**
  * @description 可以把 useAttrs() 返回的对象的属性, 统一去除字符串 s 开头的字符串
- * @param {string} s 
+ * @param {string} s
  * @example
- * 
+ *
  * 函数传入't' { tName: '张三',tAge: 18 }, 最终函数返回 { name: '张三', age: 18 }
  */
 export default function useMyAttrs(s) {

@@ -1,8 +1,8 @@
 // @ts-check
-import useRequest from './useRequest'
+import useRequest from '../utils/useRequest'
 /**
  * @param {ReqFn} reqFn - 请求接口的函数
- * @param {Omit<import('./useRequest').Options, 'initDataList' | 'formatDataListFn'> & {props?: Props}} [options] -配置项具体如下:
+ * @param {Omit<import('../utils/useRequest').Options, 'initDataList' | 'formatDataListFn'> & {props?: Props}} [options] -配置项具体如下:
  * @example
  *  1-- props 参数用于设置接口返回的label, value 等
  *  props?: {
@@ -11,9 +11,9 @@ import useRequest from './useRequest'
  *  disabled?: string 默认值 'disabled'
  *  color?: string 默认值 'color'
  * }
- * 
+ *
  * 2-- immediate?: boolean
- * 3-- reqParams?: any 
+ * 3-- reqParams?: any
  * 4-- deps?: any[]
  * 5-- onSuccess?: () => void
  * 6-- onError?: () => void
@@ -52,32 +52,6 @@ export default function useOptions(reqFn, options) {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /**
  * @description - 用于设置接口返回的label, value 等值
  * @typedef {Object} Props
@@ -86,7 +60,6 @@ export default function useOptions(reqFn, options) {
  * @prop {string} [disabled='disabled'] - disabled 默认值 = 'disabled'
  * @prop {string} [color='color'] - color 默认值 = 'color'
  */
-
 
 /**
  * @template T
@@ -98,11 +71,14 @@ export default function useOptions(reqFn, options) {
  * @typedef {import('@/utils/request').ResData<T>} ResData
  */
 
-
 /**
  * @typedef {Record<string, any> | any[]} Params
  */
 
 /**
  * @typedef {(params?: Params) => Promise<ResData<any[]>>} ReqFn
+ */
+
+/**
+ * @typedef {{ label: string, value: number|string, key: number|string, disabled: boolean}[]} Options
  */
