@@ -27,11 +27,15 @@ import GoodsList from '../components/GoodsList/index.vue'
 import HotArea from '../components/HotArea/index.vue'
 import NavGroup from '../components/NavGroup/index.vue'
 import UserInfo from '../components/UserInfo/index.vue'
+import Tip from '../components/Tip/index.vue'
 import Vuedraggable from 'vuedraggable'
+
+import { getConfig } from '../components/Tip'
 
 import { ref } from 'vue'
 import { useVModel, useAddEventListener } from '@/hook'
 import { useControls } from '@/store'
+import { storeToRefs } from 'pinia'
 
 const props = defineProps({
   modelValue: {
@@ -48,11 +52,13 @@ const emit = defineEmits(['update:modelValue'])
 
 const selectedControls = useVModel(props, 'modelValue')
 
+const { activeControl } = storeToRefs(useControls())
+
 const phoneRef = ref(/** @type {HTMLElement | null} */(null))
 
 const onClick = (item) => {
   console.log('点击了phone里面的控件拉')
-  useControls().activeControl = item
+  activeControl.value = item
 }
 
 const onStart = (e) => {}
@@ -70,11 +76,15 @@ useAddEventListener(phoneRef, 'dragenter', (e) => {
   console.log('e = ', e)
   /* 被拖动元素样式改变 */
   /* 显示虚拟线, 可以放置该组件 */
+  selectedControls.value.push(getConfig())
 })
 
 useAddEventListener(phoneRef, 'dragleave', (e) => {
   console.log('dragleave')
   console.log('e = ', e)
+  const { length } = selectedControls.value
+  if (!length) return
+  selectedControls.value = selectedControls.value.filter(el => el.componentName !== 'Tip')
 })
 
 useAddEventListener(phoneRef, 'drop', (e) => {
