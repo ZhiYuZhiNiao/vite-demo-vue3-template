@@ -1,4 +1,6 @@
 // @ts-check
+import { uuidv4 } from '@/utils'
+
 export const getConfig = () => ({
   componentName: /** @type {const} */('ArticleList'),
   name: /** @type {const} */('文章列表'),
@@ -13,7 +15,8 @@ export const getConfig = () => ({
           key: /** @type {const} */('articleListStyle') /* 风格 */,
           value: /** @type {ReturnType<getStyleOpts>[number]['value']} */(1)
         }
-      ]
+      ],
+      id: uuidv4()
     },
     {
       label: /** @type {const} */('文章设置'),
@@ -32,7 +35,8 @@ export const getConfig = () => ({
           key: /** @type {const} */('articleListNum'),
           value: /** @type {number | undefined} */(undefined)
         }
-      ]
+      ],
+      id: uuidv4()
     },
     {
       label: /** @type {const} */('列表设置'),
@@ -44,7 +48,8 @@ export const getConfig = () => ({
           key: /** @type {const} */('articleListIsShow'),
           value: /** @type {ReturnType<getIsShowOpts>[number]['value'][]} */([])
         }
-      ]
+      ],
+      id: uuidv4()
     }
   ],
   styleFormLayout: []

@@ -8,7 +8,7 @@
       @end="onEnd"
     >
       <template #item="{element}">
-        <div class="item">{{ element.name }}</div>
+        <div class="item" @click="onClick(element)">{{ element.name }}</div>
       </template>
     </Vuedraggable>
   </div>
@@ -17,19 +17,32 @@
 <script setup>
 import Vuedraggable from 'vuedraggable'
 import { useControls } from '@/store'
+import { storeToRefs } from 'pinia'
 import { useVModel } from '@/hook'
 
-const { createControls } = useControls()
-console.log('createControls', createControls)
+const { activeControl } = storeToRefs(useControls())
 
 const props = defineProps({
   modelValue: {
-    type: /** @type {import('vue').PropType<ReturnType<typeof createControls>>} */(Array),
+    type: /** @type {import('vue').PropType<ReturnType<typeof useControls>['controls']>} */(Array),
     required: true
   }
 })
 
 const list = useVModel(props, 'modelValue')
+
+const onStart = (e) => {
+  console.log('controls-- onStart')
+}
+const onEnd = (e) => {}
+
+/**
+ * @param {ReturnType<typeof useControls>['controls'][number]} item
+ */
+const onClick = (item) => {
+  // 选中了当前的控件
+  activeControl.value = item
+}
 </script>
 
 <style lang="scss" scoped>

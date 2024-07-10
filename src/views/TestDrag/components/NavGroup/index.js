@@ -1,4 +1,6 @@
 // @ts-check
+import { uuidv4 } from '@/utils'
+
 export const getConfig = () => ({
   componentName: /** @type {const} */('NavGroup'),
   name: /** @type {const} */('导航组'),
@@ -27,7 +29,8 @@ export const getConfig = () => ({
           key: /** @type {const} */('navGroupShowStyle'),
           value: /** @type {ReturnType<getShowStyleOpts>[number]['value']} */(1)
         }
-      ]
+      ],
+      id: uuidv4()
     }
   ],
   styleFormLayout: []

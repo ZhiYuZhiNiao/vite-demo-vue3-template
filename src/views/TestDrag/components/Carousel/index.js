@@ -1,3 +1,5 @@
+import { uuidv4 } from '@/utils'
+
 export const getConfig = () => ({
   componentName: /** @type {const} */('Carousel'),
   name: /** @type {const} */('轮播图'),
@@ -12,7 +14,8 @@ export const getConfig = () => ({
           key: /** @type {const} */('carouselStyle') /* 风格 */,
           value: /** @type {ReturnType<getStyleOpts>[number]['value']} */(1)
         }
-      ]
+      ],
+      id: uuidv4()
     }
   ],
   styleFormLayout: []

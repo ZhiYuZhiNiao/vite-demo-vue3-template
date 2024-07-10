@@ -5,15 +5,19 @@
     </div>
     <div class="middle-container item-container">
       <div class="h5-container">
-
+        <Phone />
       </div>
     </div>
-    <div class="right-container item-container"></div>
+    <div class="right-container item-container">
+      <Form />
+    </div>
   </div>
 </template>
 
 <script setup>
 import Controls from './Controls/index.vue'
+import Phone from './Phone/index.vue'
+import Form from './Form/index.vue'
 import { useControls } from '@/store'
 import { storeToRefs } from 'pinia'
 

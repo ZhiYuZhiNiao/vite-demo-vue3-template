@@ -3,6 +3,7 @@
     <div class="left">
       <p><RouterLink to="/">Go to Home</RouterLink></p>
       <p><RouterLink to="/TestDrag">TestDrag</RouterLink></p>
+      <p><RouterLink to="/TestForm">TestForm</RouterLink></p>
     </div>
     <div class="main">
       <RouterView></RouterView>

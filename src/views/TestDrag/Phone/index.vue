@@ -1,11 +1,21 @@
 <template>
-  <div class="phone-container">
-    <component
-      v-for="item of selectedControls"
-      :key="item.name"
-      :is="item.componentName"
-      v-model="item.value"
-    />
+  <div class="phone-container" ref="phoneRef">
+    <Vuedraggable
+      v-model="selectedControls"
+      chosen-class="chosen-item"
+      class="draggable-container"
+      @start="onStart"
+      @end="onEnd"
+    >
+      <template #item="{element}">
+        <component
+          :is="element.componentName"
+          v-bind="props.outProps"
+          @click="onClick(element)"
+        />
+      </template>
+    </Vuedraggable>
+
   </div>
 </template>
 
@@ -17,23 +27,67 @@ import GoodsList from '../components/GoodsList/index.vue'
 import HotArea from '../components/HotArea/index.vue'
 import NavGroup from '../components/NavGroup/index.vue'
 import UserInfo from '../components/UserInfo/index.vue'
+import Vuedraggable from 'vuedraggable'
 
-import { useVModel } from '@/hook'
+import { ref } from 'vue'
+import { useVModel, useAddEventListener } from '@/hook'
 import { useControls } from '@/store'
-
-const { createSelectedControls } = useControls()
 
 const props = defineProps({
   modelValue: {
-    type: /** @type {import('vue').PropType<ReturnType<typeof createSelectedControls>>} */ (Array),
+    type: /** @type {import('vue').PropType<ReturnType<typeof useControls>['selectedControls']>} */ (Array),
     required: true
+  },
+  outProps: {
+    type: Object,
+    default: () => ({})
   }
 })
 
 const emit = defineEmits(['update:modelValue'])
 
 const selectedControls = useVModel(props, 'modelValue')
+
+const phoneRef = ref(/** @type {HTMLElement | null} */(null))
+
+const onClick = (item) => {
+  console.log('点击了phone里面的控件拉')
+  useControls().activeControl = item
+}
+
+const onStart = (e) => {}
+const onEnd = (e) => {}
+
+useAddEventListener(phoneRef, 'dragover', (e) => {
+  console.log('dragover')
+  console.log('e = ', e)
+  // 阻止默认行为以允许放置
+  e.preventDefault()
+})
+
+useAddEventListener(phoneRef, 'dragenter', (e) => {
+  console.log('dragenter')
+  console.log('e = ', e)
+  /* 被拖动元素样式改变 */
+  /* 显示虚拟线, 可以放置该组件 */
+})
+
+useAddEventListener(phoneRef, 'dragleave', (e) => {
+  console.log('dragleave')
+  console.log('e = ', e)
+})
+
+useAddEventListener(phoneRef, 'drop', (e) => {
+  console.log('drop')
+  console.log('e = ', e)
+  // 阻止默认行为（会作为某些元素的链接打开）
+  e.preventDefault()
+})
 </script>
 
 <style lang="scss" scoped>
+.phone-container {
+  width: 100%;
+  height: 100%;
+}
 </style>

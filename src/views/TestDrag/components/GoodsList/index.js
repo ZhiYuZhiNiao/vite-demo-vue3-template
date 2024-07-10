@@ -1,4 +1,6 @@
 // @ts-check
+import { uuidv4 } from '@/utils'
+
 export const getConfig = () => ({
   componentName: /** @type {const} */('GoodsList'),
   name: /** @type {const} */('商品列表'),
@@ -13,7 +15,8 @@ export const getConfig = () => ({
           key: /** @type {const} */('goodsListStyle') /* 风格 */,
           value: /** @type {ReturnType<getStyleOpts>[number]['value']} */(1)
         }
-      ]
+      ],
+      id: uuidv4()
     },
     {
       label: /** @type {const} */('商品设置'),
@@ -31,7 +34,8 @@ export const getConfig = () => ({
           key: /** @type {const} */('goodsListImgs'),
           value: /** @type {string[]} */([])
         }
-      ]
+      ],
+      id: uuidv4()
     },
     {
       label: /** @type {const} */('显示内容'),
@@ -43,7 +47,8 @@ export const getConfig = () => ({
           key: /** @type {const} */('goodsListShowContent'),
           value: /** @type {ReturnType<getShowContentOpts>[number]['value'][]} */([])
         }
-      ]
+      ],
+      id: uuidv4()
     }
   ],
   styleFormLayout: []

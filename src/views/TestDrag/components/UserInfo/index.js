@@ -1,4 +1,5 @@
 // @ts-check
+import { uuidv4 } from '@/utils'
 export const getConfig = () => ({
   componentName: /** @type {const} */('UserInfo'),
   name: /** @type {const} */('用户信息'),
@@ -20,7 +21,8 @@ export const getConfig = () => ({
           key: /** @type {const} */('userInfoShowTypes') /* 风格 */,
           value: /** @type {ReturnType<getShowTypesOpts>[number]['value'][]} */([])
         }
-      ]
+      ],
+      id: uuidv4()
     }
   ],
   styleFormLayout: []
