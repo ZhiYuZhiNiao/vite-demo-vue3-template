@@ -25,6 +25,8 @@ export default function useVModel(props, key) {
         }
       })
     },
-    set(val) { context.emit?.(`update:${key}`, val) }
+    set(val) {
+      context.emit?.(`update:${key}`, val)
+    }
   })
 }

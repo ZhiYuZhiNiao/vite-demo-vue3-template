@@ -17,7 +17,7 @@ export default function useFormTitle(title) {
 
 function createEntries() {
   return [
-    /** @type {const} */(['content', { value: 'content', label: '内容', activeColor: '--el-color-primary', color: '--el-color-primary' }]),
-    /** @type {const} */(['style', { value: 'style', label: '样式', activeColor: '--el-color-primary', color: '#f9f9f9' }])
+    /** @type {const} */(['content', { value: 'content', label: '内容', activeColor: 'var(--el-color-primary)', color: 'var(--el-color-primary)' }]),
+    /** @type {const} */(['style', { value: 'style', label: '样式', activeColor: 'var(--el-color-primary)', color: '#f9f9f9' }])
   ]
 }

@@ -2,6 +2,7 @@
   <div class="phone-container" ref="phoneRef">
     <Vuedraggable
       v-model="selectedControls"
+      itemKey="id"
       chosen-class="chosen-item"
       class="draggable-container"
       @start="onStart"
@@ -15,12 +16,10 @@
         />
       </template>
     </Vuedraggable>
-
   </div>
 </template>
 
 <script setup>
-/* eslint-disable no-unused-vars */
 import ArticleList from '../components/ArticleList/index.vue'
 import Carousel from '../components/Carousel/index.vue'
 import GoodsList from '../components/GoodsList/index.vue'
@@ -32,10 +31,16 @@ import Vuedraggable from 'vuedraggable'
 
 import { getConfig } from '../components/Tip'
 
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import { useVModel, useAddEventListener } from '@/hook'
 import { useControls } from '@/store'
 import { storeToRefs } from 'pinia'
+
+defineOptions({
+  components: {
+    ArticleList, Carousel, GoodsList, HotArea, NavGroup, UserInfo, Tip
+  }
+})
 
 const props = defineProps({
   modelValue: {
@@ -48,7 +53,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['update:modelValue'])
+defineEmits(['update:modelValue'])
 
 const selectedControls = useVModel(props, 'modelValue')
 
@@ -61,12 +66,14 @@ const onClick = (item) => {
   activeControl.value = item
 }
 
-const onStart = (e) => {}
-const onEnd = (e) => {}
+const onStart = (e) => {
+}
+const onEnd = (e) => {
+}
 
 useAddEventListener(phoneRef, 'dragover', (e) => {
-  console.log('dragover')
-  console.log('e = ', e)
+  // console.log('dragover')
+  // console.log('e = ', e)
   // 阻止默认行为以允许放置
   e.preventDefault()
 })
@@ -76,14 +83,15 @@ useAddEventListener(phoneRef, 'dragenter', (e) => {
   console.log('e = ', e)
   /* 被拖动元素样式改变 */
   /* 显示虚拟线, 可以放置该组件 */
-  selectedControls.value.push(getConfig())
+  selectedControls.value = [...selectedControls.value, getConfig()]
+  nextTick(() => {
+    console.log('selectedControls.value', selectedControls.value[0])
+  })
 })
 
 useAddEventListener(phoneRef, 'dragleave', (e) => {
   console.log('dragleave')
   console.log('e = ', e)
-  const { length } = selectedControls.value
-  if (!length) return
   selectedControls.value = selectedControls.value.filter(el => el.componentName !== 'Tip')
 })
 
@@ -92,6 +100,9 @@ useAddEventListener(phoneRef, 'drop', (e) => {
   console.log('e = ', e)
   // 阻止默认行为（会作为某些元素的链接打开）
   e.preventDefault()
+  selectedControls.value = [...selectedControls.value, activeControl.value].filter(el => el.componentName !== 'Tip')
+  console.log(e?.dataTransfer?.getData)
+  console.log(e?.dataTransfer?.getData('test'))
 })
 </script>
 

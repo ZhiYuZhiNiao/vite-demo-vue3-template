@@ -24,8 +24,17 @@
 
 <script setup>
 import FormTitle from '@/components/FormTitle/index.vue'
+import CheckGroup from '@/components/CheckGroup/index.vue'
+import RadioGroup from '@/components/RadioGroup/index.vue'
+import Select from '@/components/Select/index.vue'
 import Item from './components/Item.vue'
 import useFormTitle from '@/components/FormTitle/useFormTitle.js'
+
+defineOptions({
+  components: {
+    CheckGroup, RadioGroup, Select
+  }
+})
 
 const props = defineProps({
   layoutList: {

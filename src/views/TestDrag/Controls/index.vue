@@ -2,13 +2,14 @@
   <div class="controls-list-container">
     <Vuedraggable
       v-model="list"
+      itemKey="componentName"
       chosen-class="chosen-item"
       class="draggable-container"
       @start="onStart"
       @end="onEnd"
     >
       <template #item="{element}">
-        <div class="item" @click="onClick(element)">{{ element.name }}</div>
+        <div class="item left-control" :data-name="element.componentName" @click="onClick(element)">{{ element.name }}</div>
       </template>
     </Vuedraggable>
   </div>
@@ -32,14 +33,24 @@ const props = defineProps({
 const list = useVModel(props, 'modelValue')
 
 const onStart = (e) => {
-  console.log('controls-- onStart')
+  const { dataset } = e?.item ?? {}
+  const { name } = dataset ?? {}
+  activeControl.value = list.value.find(el => el.componentName === name)
+  console.log('activeControl.value = ', activeControl.value)
+  console.log('onStart e = ', e)
+  console.log(e?.originalEvent?.dataTransfer?.setData)
+  e?.originalEvent?.dataTransfer?.setData('test', '12')
 }
-const onEnd = (e) => {}
+const onEnd = (e) => {
+  console.log('end e = ', e)
+  console.log(e?.originalEvent?.dataTransfer?.getData('test'))
+}
 
 /**
  * @param {ReturnType<typeof useControls>['controls'][number]} item
  */
 const onClick = (item) => {
+  console.log('点击了左侧item = ', item)
   // 选中了当前的控件
   activeControl.value = item
 }

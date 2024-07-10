@@ -21,6 +21,7 @@ module.exports = {
   rules: {
     'vue/multi-word-component-names': 'off',
     'vue/comment-directive': 'off',
-    'space-before-function-paren': 0 // 函数名后不保留空格
+    'space-before-function-paren': 0, // 函数名后不保留空格
+    'vue/require-component-is': 'off'
   }
 }
