@@ -21,7 +21,8 @@ import { useControls } from '@/store'
 import { storeToRefs } from 'pinia'
 import { useVModel } from '@/hook'
 
-const { activeControl, controlMap } = storeToRefs(useControls())
+const { dragingControl } = storeToRefs(useControls())
+const { controlMap } = useControls()
 
 const props = defineProps({
   modelValue: {
@@ -35,13 +36,15 @@ const list = useVModel(props, 'modelValue')
 const onStart = (e) => {
   const { dataset } = e?.item ?? {}
   const { name } = dataset ?? {}
+  console.log('controlMap', controlMap)
   /* 需要创建一个新的xx */
-  const fn = controlMap.value[name]
+  const fn = controlMap[name]
   if (!fn) {
     console.error('fn 不存在')
     return
   }
-  activeControl.value = fn()
+  dragingControl.value = fn()
+  dragingControl.value.state = 'fromLeft'
 }
 const onEnd = (e) => {
 }
@@ -51,8 +54,7 @@ const onEnd = (e) => {
  */
 const onClick = (item) => {
   console.log('点击了左侧item = ', item)
-  // 选中了当前的控件
-  activeControl.value = item
+  // 直接添加到中间
 }
 </script>
 

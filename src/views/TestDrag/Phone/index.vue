@@ -32,8 +32,8 @@ import Vuedraggable from 'vuedraggable'
 
 import { getConfig } from '../components/Tip'
 
-import { ref, nextTick } from 'vue'
-import { useVModel, useAddEventListener } from '@/hook'
+import { ref } from 'vue'
+import { useAddEventListener } from '@/hook'
 import { useControls } from '@/store'
 import { storeToRefs } from 'pinia'
 
@@ -44,10 +44,10 @@ defineOptions({
 })
 
 const props = defineProps({
-  modelValue: {
-    type: /** @type {import('vue').PropType<ReturnType<typeof useControls>['selectedControls']>} */ (Array),
-    required: true
-  },
+  // modelValue: {
+  //   type: /** @type {import('vue').PropType<ReturnType<typeof useControls>['selectedControls']>} */ (Array),
+  //   required: true
+  // },
   outProps: {
     type: Object,
     default: () => ({})
@@ -56,11 +56,14 @@ const props = defineProps({
 
 defineEmits(['update:modelValue'])
 
-const selectedControls = useVModel(props, 'modelValue')
+// const selectedControls = useVModel(props, 'modelValue')
 
-const { activeControl } = storeToRefs(useControls())
+const { activeControl, dragingControl, selectedControls } = storeToRefs(useControls())
+const { add, del } = useControls()
 
 const phoneRef = ref(/** @type {HTMLElement | null} */(null))
+
+const tipControl = getConfig()
 
 const onClick = (item) => {
   console.log('点击了phone里面的控件拉')
@@ -78,7 +81,7 @@ const onStart = (e) => {
     return
   }
   findItem.state = 'fromMiddle'
-  activeControl.value = findItem
+  dragingControl.value = findItem
 }
 
 const onEnd = (e) => {
@@ -95,36 +98,33 @@ useAddEventListener(phoneRef, 'dragenter', (e) => {
   // console.log('dragenter')
   // console.log('e = ', e)
   /* 必须是从 middle-container 这个元素进入的, 否则无效 */
-  // console.log(e?.relatedTarget?.className.includes('middle-container'))
   if (!(e?.relatedTarget?.className.includes('middle-container'))) return
 
   /* 已经存在了也直接return */
-  if (selectedControls.value.some(el => el.componentName === 'Tip')) return
+  if (selectedControls.value.some(el => tipControl.componentName)) return
 
   /* 被拖动元素样式改变 */
   /* 显示虚拟线, 可以放置该组件 */
-  selectedControls.value = [...selectedControls.value, getConfig()]
-  nextTick(() => {
-    console.log('selectedControls.value', selectedControls.value[0])
-  })
+  add(tipControl)
 })
 
 useAddEventListener(phoneRef, 'dragleave', (e) => {
-  // console.log('dragleave')
-  // console.log('e = ', e)
+  console.log('dragleave')
+  console.log('e = ', e)
   /* 必须是从 middle-container 这个元素中离开的 */
   if (!(e?.relatedTarget?.className.includes('middle-container'))) return
-  selectedControls.value = selectedControls.value.filter(el => el.componentName !== 'Tip')
+  del(tipControl)
 })
 
 useAddEventListener(phoneRef, 'drop', (e) => {
-  console.log('drop')
-  console.log('e = ', e)
+  // console.log('drop')
+  // console.log('e = ', e)
   // 阻止默认行为（会作为某些元素的链接打开）
   e.preventDefault()
-  console.log('activeControl.value = ', activeControl.value)
-  if (activeControl.value.state !== 'fromLeft') return
-  selectedControls.value = [...selectedControls.value, activeControl.value].filter(el => el.componentName !== 'Tip')
+  console.log('activeControl.value = ', dragingControl.value)
+  if (dragingControl.value.state !== 'fromLeft') return
+  add(dragingControl)
+  del(tipControl)
 })
 </script>
 

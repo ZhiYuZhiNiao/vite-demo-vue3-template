@@ -5,9 +5,7 @@
     </div>
     <div class="middle-container item-container">
       <div class="h5-container">
-        <Phone
-          v-model="selectedControls"
-        />
+        <Phone/>
       </div>
     </div>
     <div class="right-container item-container">
@@ -23,7 +21,7 @@ import Form from './Form/index.vue'
 import { useControls } from '@/store'
 import { storeToRefs } from 'pinia'
 
-const { controls, selectedControls } = storeToRefs(useControls())
+const { controls } = storeToRefs(useControls())
 
 </script>
 
