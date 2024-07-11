@@ -1,7 +1,9 @@
 // @ts-check
 import { uuidv4 } from '@/utils'
+import { getComState } from '../index'
 
 export const getConfig = () => ({
+  state: getComState(),
   componentName: /** @type {const} */('NavGroup'),
   name: /** @type {const} */('导航组'),
   contentFormLayout: [

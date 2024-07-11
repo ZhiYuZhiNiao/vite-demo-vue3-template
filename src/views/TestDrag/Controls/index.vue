@@ -35,15 +35,15 @@ const list = useVModel(props, 'modelValue')
 const onStart = (e) => {
   const { dataset } = e?.item ?? {}
   const { name } = dataset ?? {}
-  activeControl.value = list.value.find(el => el.componentName === name)
-  console.log('activeControl.value = ', activeControl.value)
-  console.log('onStart e = ', e)
-  console.log(e?.originalEvent?.dataTransfer?.setData)
-  e?.originalEvent?.dataTransfer?.setData('test', '12')
+  const findItem = list.value.find(el => el.componentName === name)
+  if (!findItem) {
+    console.error('findItem 不存在')
+    return
+  }
+  findItem.state = 'fromLeft'
+  activeControl.value = findItem
 }
 const onEnd = (e) => {
-  console.log('end e = ', e)
-  console.log(e?.originalEvent?.dataTransfer?.getData('test'))
 }
 
 /**

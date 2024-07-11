@@ -11,6 +11,7 @@
       <template #item="{element}">
         <component
           :is="element.componentName"
+          :data-name="element.componentName"
           v-bind="props.outProps"
           @click="onClick(element)"
         />
@@ -67,7 +68,18 @@ const onClick = (item) => {
 }
 
 const onStart = (e) => {
+  console.log('phone-start-e = ', e)
+  const { dataset } = e?.item ?? {}
+  const { name } = dataset ?? {}
+  const findItem = selectedControls.value.find(el => el.componentName === name)
+  if (!findItem) {
+    console.error('findItem 不存在')
+    return
+  }
+  findItem.state = 'fromMiddle'
+  activeControl.value = findItem.state
 }
+
 const onEnd = (e) => {
 }
 
@@ -100,9 +112,8 @@ useAddEventListener(phoneRef, 'drop', (e) => {
   console.log('e = ', e)
   // 阻止默认行为（会作为某些元素的链接打开）
   e.preventDefault()
+  if (activeControl.value.state !== 'fromLeft') return
   selectedControls.value = [...selectedControls.value, activeControl.value].filter(el => el.componentName !== 'Tip')
-  console.log(e?.dataTransfer?.getData)
-  console.log(e?.dataTransfer?.getData('test'))
 })
 </script>
 

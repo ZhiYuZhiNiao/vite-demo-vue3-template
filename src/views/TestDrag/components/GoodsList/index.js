@@ -1,5 +1,6 @@
 // @ts-check
 import { uuidv4 } from '@/utils'
+import { getComState } from '../index'
 
 export const getConfig = () => ({
   componentName: /** @type {const} */('GoodsList'),
@@ -51,7 +52,8 @@ export const getConfig = () => ({
       id: uuidv4()
     }
   ],
-  styleFormLayout: []
+  styleFormLayout: [],
+  state: getComState()
 })
 
 /**
