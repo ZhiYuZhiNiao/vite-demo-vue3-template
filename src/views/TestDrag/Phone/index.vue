@@ -91,8 +91,15 @@ useAddEventListener(phoneRef, 'dragover', (e) => {
 })
 
 useAddEventListener(phoneRef, 'dragenter', (e) => {
-  console.log('dragenter')
-  console.log('e = ', e)
+  // console.log('dragenter')
+  // console.log('e = ', e)
+  /* 必须是从 middle-container 这个元素进入的, 否则无效 */
+  console.log(e?.relatedTarget?.className.includes('middle-container'))
+  if (!(e?.relatedTarget?.className.includes('middle-container'))) return
+
+  /* 已经存在了也直接return */
+  if (selectedControls.value.some(el => el.componentName === 'Tip')) return
+
   /* 被拖动元素样式改变 */
   /* 显示虚拟线, 可以放置该组件 */
   selectedControls.value = [...selectedControls.value, getConfig()]
@@ -104,12 +111,14 @@ useAddEventListener(phoneRef, 'dragenter', (e) => {
 useAddEventListener(phoneRef, 'dragleave', (e) => {
   console.log('dragleave')
   console.log('e = ', e)
+  /* 必须是从 middle-container 这个元素中离开的 */
+  if (!(e?.relatedTarget?.className.includes('middle-container'))) return
   selectedControls.value = selectedControls.value.filter(el => el.componentName !== 'Tip')
 })
 
 useAddEventListener(phoneRef, 'drop', (e) => {
-  console.log('drop')
-  console.log('e = ', e)
+  // console.log('drop')
+  // console.log('e = ', e)
   // 阻止默认行为（会作为某些元素的链接打开）
   e.preventDefault()
   if (activeControl.value.state !== 'fromLeft') return

@@ -47,10 +47,11 @@ const { controls, selectedControls } = storeToRefs(useControls())
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: #f0f2f5;
     .h5-container {
       width: 375px;
       height: 667px;
-      border: 1px solid pink;
+      background-color: #fff;
       // border-radius: 8px;
     }
   }
