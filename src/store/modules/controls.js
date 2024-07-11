@@ -23,16 +23,17 @@ export const useControls = defineStore('controls', () => {
   /** @description 当前正在被拖动中的控件 */
   const dragingControl = ref(/** @type {ReturnType<createControls>[number]} */({}))
 
-  const controlMap = Object.freeze({
-    ArticleList: getArticleListConfig,
-    Carousel: getCarouselConfig,
-    GoodsList: getGoodsListConfig,
-    HotArea: getHotAreaConfig,
-    NavGroup: getNavGroupConfig,
-    UserInfo: getUserInfoConfig
-  })
+  const controlMap = new Map([
+    /** @type {const} */(['ArticleList', getArticleListConfig]),
+    /** @type {const} */(['Carousel', getCarouselConfig]),
+    /** @type {const} */(['GoodsList', getGoodsListConfig]),
+    /** @type {const} */(['HotArea', getHotAreaConfig]),
+    /** @type {const} */(['NavGroup', getNavGroupConfig]),
+    /** @type {const} */(['UserInfo', getUserInfoConfig])
+  ])
 
   /**
+   * @description 向 selectedControls 中添加
    * @param {import('vue').MaybeRef<ReturnType<createSelectedControls>[number]>} control
    * @param {number} [index]
    */
@@ -46,6 +47,7 @@ export const useControls = defineStore('controls', () => {
   }
 
   /**
+     * @description 删除 selectedControls 中的某个 control
    * @param {import('vue').MaybeRef<ReturnType<createSelectedControls>[number]>} control
    */
   const del = (control) => {
@@ -61,7 +63,7 @@ function createSelectedControls() {
 }
 
 function createControls() {
-  return _createControls().filter(el => el.componentName !== 'Tip')
+  return _createControls().filter(el => el.componentName !== 'Head' && el.componentName !== 'BottomNav' && el.componentName !== 'Tip')
 }
 
 function _createControls() {

@@ -4,10 +4,10 @@
     <Item
       v-for="item of props.layoutList"
       :key="item.id"
-      :title="item.title"
+      :title="item.label"
     >
       <ElFormItem
-        v-for="com of item"
+        v-for="com of item.list"
         :key="com.key"
         :label="com.label"
         :prop="item.key"

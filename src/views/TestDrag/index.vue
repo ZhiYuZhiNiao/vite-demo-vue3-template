@@ -9,7 +9,9 @@
       </div>
     </div>
     <div class="right-container item-container">
-      <Form />
+      <Form
+        :layout-list="activeControl.contentFormLayout ?? []"
+      />
     </div>
   </div>
 </template>
@@ -18,9 +20,10 @@
 import Controls from './Controls/index.vue'
 import Phone from './Phone/index.vue'
 import Form from './Form/index.vue'
-// import { useControls } from '@/store'
-// import { storeToRefs } from 'pinia'
+import { useControls } from '@/store'
+import { storeToRefs } from 'pinia'
 
+const { activeControl } = storeToRefs(useControls())
 </script>
 
 <style lang="scss" scoped>

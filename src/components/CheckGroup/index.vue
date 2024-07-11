@@ -15,7 +15,7 @@
     <el-checkbox
       v-for="item of props.options"
       :key="item.value"
-      :label="item.value"
+      :value="item.value"
       :disabled="item.disabled"
     >
       {{ showLabel?.(item) ?? (item.label || '') }}

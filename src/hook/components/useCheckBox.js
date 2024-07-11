@@ -1,4 +1,4 @@
-import { computed, ref, getCurrentInstance, unref, toRefs } from 'vue'
+import { computed, ref, getCurrentInstance, unref } from 'vue'
 import { useVModel } from '@/hook'
 
 /**
@@ -37,12 +37,10 @@ export default function useCheckBox(props, key, canCheckList) {
   }
 
   return {
-    ...toRefs({
-      isCheckAll,
-      isIndeterminate,
-      disableCheckAllBtn,
-      checkedCodes
-    }),
+    isCheckAll,
+    isIndeterminate,
+    disableCheckAllBtn,
+    checkedCodes,
     updateCheckAllBtnState,
     onCheckAllChange
   }

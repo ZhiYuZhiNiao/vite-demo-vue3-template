@@ -14,7 +14,7 @@
 import { useVModel } from '@/hook'
 const props = defineProps({
   modelValue: {
-    type: /** @type {import('vue').PropType<string | number>} */(String),
+    type: [String, Number],
     required: true
   },
   options: {

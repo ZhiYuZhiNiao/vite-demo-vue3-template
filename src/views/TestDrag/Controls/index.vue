@@ -22,7 +22,7 @@ import Vuedraggable from 'vuedraggable'
 import { useControls } from '@/store'
 import { storeToRefs } from 'pinia'
 
-const { dragingControl, controls, selectedControls } = storeToRefs(useControls())
+const { controls, selectedControls, activeControl } = storeToRefs(useControls())
 const { controlMap, add } = useControls()
 
 const onStart = (e) => {
@@ -40,14 +40,14 @@ const onEnd = (e) => {
  */
 const onClick = (item) => {
   // 直接添加到中间
-  const fn = controlMap[item.componentName]
-  if (!fn) {
-    console.error('fn 不存在')
+  const creatControlFn = controlMap.get(item.componentName)
+  if (!creatControlFn) {
+    console.error('creatControlFn 不存在')
     return
   }
-  dragingControl.value = fn()
-  dragingControl.value.state = 'fromLeft'
-  add(dragingControl)
+  const cotrol = creatControlFn()
+  add(cotrol)
+  activeControl.value = cotrol
 }
 </script>
 

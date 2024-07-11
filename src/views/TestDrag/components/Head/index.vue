@@ -1,5 +1,5 @@
 <template>
-  <div class="Head-view-container unmover">
+  <div class="Head-view-container unmover view-component">
     <div class="title">首页</div>
   </div>
 </template>

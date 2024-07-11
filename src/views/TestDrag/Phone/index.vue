@@ -1,5 +1,9 @@
 <template>
   <ElScrollbar height="667px" view-class="phone-view">
+    <!--
+      :filter=".unmover" 设置了unmover样式的元素不允许拖动 (主动的移动)
+      :draggable=".item" 那些元素是可以被拖动的 (被动的移动)
+    -->
     <Vuedraggable
       v-model="selectedControls"
       itemKey="id"
@@ -7,13 +11,17 @@
       chosen-class="chosen-item"
       class="draggable-container"
       filter=".unmover"
+      draggable=".draggable"
       @start="onStart"
       @end="onEnd"
+      @add="onAdd"
     >
+      <!-- 记得测试一下vue里面这种传递会直接作用于内层的子元素 -->
       <template #item="{element}">
         <component
           :is="element.componentName"
           :data-name="element.componentName"
+          :style="getActiveControlStyle(element)"
           v-bind="props.outProps"
           @click="onClick(element)"
         />
@@ -54,8 +62,20 @@ defineEmits(['update:modelValue'])
 
 const { activeControl, selectedControls } = storeToRefs(useControls())
 
+/**
+ * @param {import('vue').UnwrapRef<typeof selectedControls>[number]} control
+ */
+const getActiveControlStyle = (control) => {
+  // ['Head', 'Tip', 'BottomNav'].includes(control.componentName) ||
+  if (activeControl.value.componentName !== control.componentName) return {}
+  return {
+    border: '4px solid rgb(58, 55, 226)'
+  }
+}
+
 const onClick = (item) => {
   console.log('点击了phone里面的控件拉')
+  console.log('item = ', item)
   activeControl.value = item
 }
 
@@ -64,6 +84,12 @@ const onStart = (e) => {
 }
 
 const onEnd = (e) => {
+}
+
+const onAdd = (e) => {
+  const { newIndex } = e
+  activeControl.value = selectedControls.value[newIndex]
+  console.log('onAdd activeControl.value = ', activeControl.value)
 }
 
 </script>
