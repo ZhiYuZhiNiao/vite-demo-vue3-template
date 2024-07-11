@@ -1,31 +1,29 @@
-import { unref, watchEffect, onBeforeUnmount, toRefs, reactive, onMounted } from 'vue'
+import { unref, watchEffect, onBeforeUnmount, toRefs, onMounted, ref } from 'vue'
 /**
  * @overload
  * @param {string} selector 选择器
- * @returns {{contentRect: import('vue').Ref<DOMRectReadOnly>}}
+ * @returns {import('vue').ToRefs<DOMRectReadOnly>}
  */
 
 /**
  * @overload
  * @param {import('vue').MaybeRef<HTMLElement | null>} el dom元素
- * @returns {{contentRect: import('vue').Ref<DOMRectReadOnly>}}
+ * @returns {import('vue').ToRefs<DOMRectReadOnly>}
  */
 
 /**
  * @param {import('vue').MaybeRef<HTMLElement | null> | string} el
  */
-export default function useHeight(el) {
+export default function useElSize(el) {
   const _el = unref(el)
-  const state = reactive({
-    contentRect: /** @type {DOMRectReadOnly} */({})
-  })
+  const state = ref(/** @type {DOMRectReadOnly} */({}))
   const resizeObserver = new ResizeObserver(entries => {
     for (const entry of entries) {
       // 每个entry代表一个被观察的元素
       // entry.contentRect包含了元素的尺寸信息
       console.log('Element:', entry.target)
       console.log('Element size:', entry.contentRect.height)
-      state.contentRect = { ...entry.contentRect }
+      state.value = { ...entry.contentRect }
       // 在这里执行你需要的操作
     }
   })
@@ -48,6 +46,6 @@ export default function useHeight(el) {
     })
   }
   return {
-    ...toRefs(state)
+    ...toRefs(state.value)
   }
 }
