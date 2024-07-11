@@ -1,22 +1,25 @@
 <template>
   <div class="phone-container" ref="phoneRef">
-    <Vuedraggable
-      v-model="selectedControls"
-      itemKey="id"
-      chosen-class="chosen-item"
-      class="draggable-container"
-      @start="onStart"
-      @end="onEnd"
-    >
-      <template #item="{element}">
-        <component
-          :is="element.componentName"
-          :data-name="element.componentName"
-          v-bind="props.outProps"
-          @click="onClick(element)"
-        />
-      </template>
-    </Vuedraggable>
+    <ElScrollbar height="667px" view-class="phone-view">
+      <Vuedraggable
+        v-model="selectedControls"
+        itemKey="id"
+        chosen-class="chosen-item"
+        class="draggable-container"
+        @start="onStart"
+        @end="onEnd"
+      >
+        <template #item="{element}">
+          <component
+            :is="element.componentName"
+            :data-name="element.componentName"
+            v-bind="props.outProps"
+            @click="onClick(element)"
+          />
+        </template>
+      </Vuedraggable>
+    </ElScrollbar>
+
   </div>
 </template>
 
@@ -71,7 +74,7 @@ const onClick = (item) => {
 }
 
 const onStart = (e) => {
-  console.log('phone-start-e = ', e)
+  // console.log('phone-start-e = ', e)
   const { dataset } = e?.item ?? {}
   const { name } = dataset ?? {}
   /* 不需要创建新的, 只需要还使用原来的就行 */
@@ -88,10 +91,11 @@ const onEnd = (e) => {
 }
 
 useAddEventListener(phoneRef, 'dragover', (e) => {
-  // console.log('dragover')
-  // console.log('e = ', e)
+  console.log('dragover')
+  console.log('e = ', e)
   // 阻止默认行为以允许放置
   e.preventDefault()
+  // e.offsetY
 })
 
 useAddEventListener(phoneRef, 'dragenter', (e) => {
@@ -101,7 +105,7 @@ useAddEventListener(phoneRef, 'dragenter', (e) => {
   if (!(e?.relatedTarget?.className.includes('middle-container'))) return
 
   /* 已经存在了也直接return */
-  if (selectedControls.value.some(el => tipControl.componentName)) return
+  if (selectedControls.value.some(el => el.componentName === tipControl.componentName)) return
 
   /* 被拖动元素样式改变 */
   /* 显示虚拟线, 可以放置该组件 */
@@ -109,8 +113,8 @@ useAddEventListener(phoneRef, 'dragenter', (e) => {
 })
 
 useAddEventListener(phoneRef, 'dragleave', (e) => {
-  console.log('dragleave')
-  console.log('e = ', e)
+  // console.log('dragleave')
+  // console.log('e = ', e)
   /* 必须是从 middle-container 这个元素中离开的 */
   if (!(e?.relatedTarget?.className.includes('middle-container'))) return
   del(tipControl)
@@ -121,7 +125,7 @@ useAddEventListener(phoneRef, 'drop', (e) => {
   // console.log('e = ', e)
   // 阻止默认行为（会作为某些元素的链接打开）
   e.preventDefault()
-  console.log('activeControl.value = ', dragingControl.value)
+  // console.log('activeControl.value = ', dragingControl.value)
   if (dragingControl.value.state !== 'fromLeft') return
   add(dragingControl)
   del(tipControl)
@@ -130,7 +134,6 @@ useAddEventListener(phoneRef, 'drop', (e) => {
 
 <style lang="scss" scoped>
 .phone-container {
-  width: 100%;
-  height: 100%;
+
 }
 </style>

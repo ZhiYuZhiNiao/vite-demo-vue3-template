@@ -32,10 +32,15 @@ export const useControls = defineStore('controls', () => {
 
   /**
    * @param {import('vue').MaybeRef<ReturnType<createSelectedControls>[number]>} control
+   * @param {number} [index]
    */
-  const add = (control) => {
+  const add = (control, index) => {
     /* 先简单的直接加在末尾 */
-    selectedControls.value = [...selectedControls.value, toValue(control)]
+    if (index === undefined) {
+      selectedControls.value.push(toValue(control))
+    } else {
+      //
+    }
   }
 
   /**

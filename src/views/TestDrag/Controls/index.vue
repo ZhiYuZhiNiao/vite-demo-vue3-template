@@ -1,7 +1,7 @@
 <template>
   <div class="controls-list-container">
     <Vuedraggable
-      v-model="list"
+      v-model="controls"
       itemKey="componentName"
       chosen-class="chosen-item"
       class="draggable-container"
@@ -19,24 +19,14 @@
 import Vuedraggable from 'vuedraggable'
 import { useControls } from '@/store'
 import { storeToRefs } from 'pinia'
-import { useVModel } from '@/hook'
 
-const { dragingControl } = storeToRefs(useControls())
-const { controlMap } = useControls()
-
-const props = defineProps({
-  modelValue: {
-    type: /** @type {import('vue').PropType<ReturnType<typeof useControls>['controls']>} */(Array),
-    required: true
-  }
-})
-
-const list = useVModel(props, 'modelValue')
+const { dragingControl, controls } = storeToRefs(useControls())
+const { controlMap, add } = useControls()
 
 const onStart = (e) => {
   const { dataset } = e?.item ?? {}
   const { name } = dataset ?? {}
-  console.log('controlMap', controlMap)
+  // console.log('controlMap', controlMap)
   /* 需要创建一个新的xx */
   const fn = controlMap[name]
   if (!fn) {
@@ -53,8 +43,15 @@ const onEnd = (e) => {
  * @param {ReturnType<typeof useControls>['controls'][number]} item
  */
 const onClick = (item) => {
-  console.log('点击了左侧item = ', item)
   // 直接添加到中间
+  const fn = controlMap[item.componentName]
+  if (!fn) {
+    console.error('fn 不存在')
+    return
+  }
+  dragingControl.value = fn()
+  dragingControl.value.state = 'fromLeft'
+  add(dragingControl)
 }
 </script>
 

@@ -1,7 +1,7 @@
 <template>
   <div class="test-drag-container">
     <div class="left-container item-container">
-      <Controls v-model="controls" />
+      <Controls/>
     </div>
     <div class="middle-container item-container">
       <div class="h5-container">
@@ -18,10 +18,8 @@
 import Controls from './Controls/index.vue'
 import Phone from './Phone/index.vue'
 import Form from './Form/index.vue'
-import { useControls } from '@/store'
-import { storeToRefs } from 'pinia'
-
-const { controls } = storeToRefs(useControls())
+// import { useControls } from '@/store'
+// import { storeToRefs } from 'pinia'
 
 </script>
 
@@ -48,7 +46,6 @@ const { controls } = storeToRefs(useControls())
     background-color: #f0f2f5;
     .h5-container {
       width: 375px;
-      height: 667px;
       background-color: #fff;
       // border-radius: 8px;
     }
