@@ -2,6 +2,8 @@
   <div class="controls-list-container">
     <Vuedraggable
       v-model="controls"
+      :sort="false"
+      :group="{ name: 'list', pull: 'clone' }"
       itemKey="componentName"
       chosen-class="chosen-item"
       class="draggable-container"
@@ -20,24 +22,18 @@ import Vuedraggable from 'vuedraggable'
 import { useControls } from '@/store'
 import { storeToRefs } from 'pinia'
 
-const { dragingControl, controls } = storeToRefs(useControls())
+const { dragingControl, controls, selectedControls } = storeToRefs(useControls())
 const { controlMap, add } = useControls()
 
 const onStart = (e) => {
-  const { dataset } = e?.item ?? {}
-  const { name } = dataset ?? {}
-  // console.log('controlMap', controlMap)
-  /* 需要创建一个新的xx */
-  const fn = controlMap[name]
-  if (!fn) {
-    console.error('fn 不存在')
-    return
-  }
-  dragingControl.value = fn()
-  dragingControl.value.state = 'fromLeft'
 }
 const onEnd = (e) => {
+  console.log('selectedControls.value = ', selectedControls.value)
 }
+
+// const pullfn = (val) => {
+//   console.log('pullfn val = ', val)
+// }
 
 /**
  * @param {ReturnType<typeof useControls>['controls'][number]} item

@@ -7,13 +7,15 @@ import { getConfig as getHotAreaConfig } from '@/views/TestDrag/components/HotAr
 import { getConfig as getNavGroupConfig } from '@/views/TestDrag/components/NavGroup'
 import { getConfig as getUserInfoConfig } from '@/views/TestDrag/components/UserInfo'
 import { getConfig as getTipConfig } from '@/views/TestDrag/components/Tip'
+import { getConfig as getHeadConfig } from '@/views/TestDrag/components/Head'
+import { getConfig as getBottomNavConfig } from '@/views/TestDrag/components/BottomNav'
 
 export const useControls = defineStore('controls', () => {
   /** @description 左侧的控件列表 */
   const controls = ref(createControls())
 
   /** @description 中间部分的控件列表 */
-  const selectedControls = ref(/** @type {ReturnType<createSelectedControls>} */([]))
+  const selectedControls = ref(/** @type {ReturnType<createSelectedControls>} */([getHeadConfig(), getBottomNavConfig()]))
 
   /** @description 当前被点击的控件 */
   const activeControl = ref(/** @type {ReturnType<createControls>[number]} */({}))
@@ -64,12 +66,14 @@ function createControls() {
 
 function _createControls() {
   return [
+    getHeadConfig(),
     getArticleListConfig(),
     getCarouselConfig(),
     getGoodsListConfig(),
     getHotAreaConfig(),
     getNavGroupConfig(),
     getUserInfoConfig(),
-    getTipConfig()
+    getTipConfig(),
+    getBottomNavConfig()
   ]
 }
