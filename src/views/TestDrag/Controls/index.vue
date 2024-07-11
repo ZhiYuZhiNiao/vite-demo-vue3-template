@@ -21,7 +21,7 @@ import { useControls } from '@/store'
 import { storeToRefs } from 'pinia'
 import { useVModel } from '@/hook'
 
-const { activeControl } = storeToRefs(useControls())
+const { activeControl, controlMap } = storeToRefs(useControls())
 
 const props = defineProps({
   modelValue: {
@@ -35,13 +35,13 @@ const list = useVModel(props, 'modelValue')
 const onStart = (e) => {
   const { dataset } = e?.item ?? {}
   const { name } = dataset ?? {}
-  const findItem = list.value.find(el => el.componentName === name)
-  if (!findItem) {
-    console.error('findItem 不存在')
+  /* 需要创建一个新的xx */
+  const fn = controlMap.value[name]
+  if (!fn) {
+    console.error('fn 不存在')
     return
   }
-  findItem.state = 'fromLeft'
-  activeControl.value = findItem
+  activeControl.value = fn()
 }
 const onEnd = (e) => {
 }

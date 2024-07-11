@@ -18,11 +18,20 @@ export const useControls = defineStore('controls', () => {
   /** @description 当前被点击的控件 */
   const activeControl = ref(/** @type {ReturnType<createControls>[number]} */({}))
 
+  const controlMap = Object.freeze({
+    ArticleList: getArticleListConfig,
+    Carousel: getCarouselConfig,
+    GoodsList: getGoodsListConfig,
+    HotArea: getHotAreaConfig,
+    NavGroup: getNavGroupConfig,
+    UserInfo: getUserInfoConfig
+  })
+
   function createForm() {
     return {}
   }
 
-  return { activeControl, controls, selectedControls, createForm }
+  return { activeControl, controls, selectedControls, createForm, controlMap }
 })
 
 // eslint-disable-next-line no-unused-vars
