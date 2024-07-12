@@ -14,7 +14,8 @@
       >
         <component
           :is="com.type"
-          v-model="com.value"
+          :modelValue="com.value"
+          @update:modelValue="onModelValueUpdate($event, com)"
           :options="com.options"
         />
       </ElFormItem>
@@ -44,8 +45,7 @@ const props = defineProps({
     required: true
   },
   modelValue: {
-    type: Object,
-    required: true
+    type: /** @type {import('vue').PropType<import('@/store/modules/controls').ActiveControl['controlForm']>} */(Object)
   }
 })
 
@@ -58,6 +58,13 @@ console.log(controlProps)
 const { activeType } = useFormTitle()
 
 const layoutList = computed(() => activeType.value === 'content' ? props.control.contentFormLayout : props.control.styleFormLayout)
+
+const onModelValueUpdate = (val, com) => {
+  com.value = val
+  controlProps.value[com.key] = val
+  console.log('controlProps = ', controlProps)
+  console.log('props.control = ', props.control)
+}
 </script>
 
 <style lang="scss">

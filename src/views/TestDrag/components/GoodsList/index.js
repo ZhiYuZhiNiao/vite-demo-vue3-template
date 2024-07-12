@@ -1,11 +1,18 @@
 // @ts-check
 import { uuidv4 } from '@/utils'
-import { getComState } from '../index'
+import { getComState, createControlForm } from '../index'
 
 export const getConfig = () => ({
   componentName: /** @type {const} */('GoodsList'),
   name: /** @type {const} */('商品列表'),
-  contentFormLayout: [
+  contentFormLayout: createContentFormLayout(),
+  styleFormLayout: [],
+  state: getComState(),
+  controlForm: createControlForm(createContentFormLayout)
+})
+
+function createContentFormLayout() {
+  return [
     {
       label: /** @type {const} */('列表设置'),
       list: [
@@ -46,15 +53,13 @@ export const getConfig = () => ({
           options: getShowContentOpts(),
           label: /** @type {const} */('展示内容'),
           key: /** @type {const} */('goodsListShowContent'),
-          value: /** @type {ReturnType<getShowContentOpts>[number]['value'][]} */([])
+          value: /** @type {ReturnType<getShowContentOpts>[number]['value']} */(1)
         }
       ],
       id: uuidv4()
     }
-  ],
-  styleFormLayout: [],
-  state: getComState()
-})
+  ]
+}
 
 /**
  * @description 获取风格opts

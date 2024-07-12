@@ -1,12 +1,18 @@
 // @ts-check
 import { uuidv4 } from '@/utils'
-import { getComState } from '../index'
+import { getComState, createControlForm } from '../index'
 
 export const getConfig = () => ({
   state: getComState(),
   componentName: /** @type {const} */('NavGroup'),
   name: /** @type {const} */('导航组'),
-  contentFormLayout: [
+  contentFormLayout: createContentFormLayout(),
+  styleFormLayout: [],
+  controlForm: createControlForm(createContentFormLayout)
+})
+
+function createContentFormLayout() {
+  return [
     {
       label: /** @type {const} */('展示设置'),
       list: [
@@ -34,9 +40,8 @@ export const getConfig = () => ({
       ],
       id: uuidv4()
     }
-  ],
-  styleFormLayout: []
-})
+  ]
+}
 
 /**
  * @description 获取导航样式opts

@@ -1,5 +1,8 @@
 <template>
   <div class="test-drag-container">
+    <div class="test-btn">
+      <ElButton :type="'primary'" @click="onSave">测试保存</ElButton>
+    </div>
     <div class="left-container item-container">
       <Controls
         v-model="controls"
@@ -14,6 +17,7 @@
     </div>
     <div class="right-container item-container">
       <Form
+        v-model="activeControl.controlForm"
         :control="activeControl"
       />
     </div>
@@ -28,13 +32,23 @@ import { useControls } from '@/store'
 import { storeToRefs } from 'pinia'
 
 const { controls, activeControl, selectedControls } = storeToRefs(useControls())
+const onSave = () => {
+  console.log('selectedControls.value = ', selectedControls.value)
+}
+
 </script>
 
 <style lang="scss" scoped>
 .test-drag-container {
+  position: relative;
   box-sizing: border-box;
   display: flex;
   margin-top: 50px;
+  .test-btn {
+    position: absolute;
+    right: 80px;
+    top: -40px;
+  }
   .item-container {
     padding: 10px;
     width: 25%;
