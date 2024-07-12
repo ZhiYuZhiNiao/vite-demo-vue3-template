@@ -14,7 +14,7 @@
     </div>
     <div class="right-container item-container">
       <Form
-        :layout-list="activeControl.contentFormLayout ?? []"
+        :control="activeControl"
       />
     </div>
   </div>

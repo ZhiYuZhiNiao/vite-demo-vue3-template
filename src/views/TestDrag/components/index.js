@@ -5,3 +5,18 @@
 export function getComState(state = 'fromLeft') {
   return state
 }
+
+/**
+ * @template {Function} F
+ * @param {F} createContentFormLayout
+ * @returns {import('typeTool').CreateControlForm<createContentFormLayout>}
+ */
+export function createControlForm(createContentFormLayout) {
+  const obj = {}
+  for (const el of createContentFormLayout()) {
+    for (const it of el.list) {
+      obj[it.key] = it.value
+    }
+  }
+  return obj
+}

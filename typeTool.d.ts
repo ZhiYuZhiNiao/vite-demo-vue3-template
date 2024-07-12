@@ -27,3 +27,7 @@ export type CheckAny<T> = CheckNever<T> extends 'no' ? '不是Any' : '是Any'
 export type 取出Map的Key类型<T extends Map<any, any>> = T extends Map<infer U, any> ? U : never
 
 export type Writable<T> = { -readonly [P in keyof T]: T[P] }
+
+export type CreateControlForm<T extends Function> = {
+  [K in ReturnType<T>[number]['list'][number]['key']]: ReturnType<T>[number]['list'][number]['value']
+}

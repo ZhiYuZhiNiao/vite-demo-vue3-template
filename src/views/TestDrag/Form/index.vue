@@ -2,7 +2,7 @@
   <ElForm>
     <FormTitle v-model="activeType" />
     <Item
-      v-for="item of props.layoutList"
+      v-for="item of layoutList"
       :key="item.id"
       :title="item.label"
     >
@@ -29,6 +29,8 @@ import RadioGroup from '@/components/RadioGroup/index.vue'
 import Select from '@/components/Select/index.vue'
 import Item from './components/Item.vue'
 import useFormTitle from '@/components/FormTitle/useFormTitle.js'
+import { computed } from 'vue'
+import { useVModel } from '@/hook'
 
 defineOptions({
   components: {
@@ -37,12 +39,23 @@ defineOptions({
 })
 
 const props = defineProps({
-  layoutList: {
-    type: Array,
+  control: {
+    type: /** @type {import('vue').PropType<import('@/store/modules/controls').ActiveControl>} */(Object),
+    required: true
+  },
+  modelValue: {
+    type: Object,
     required: true
   }
 })
+
+defineEmits(['update:modelValue'])
+
+const controlProps = useVModel(props, 'modelValue')
+
 const { activeType } = useFormTitle()
+
+const layoutList = computed(() => activeType.value === 'content' ? props.control.contentFormLayout : props.control.styleFormLayout)
 </script>
 
 <style lang="scss">

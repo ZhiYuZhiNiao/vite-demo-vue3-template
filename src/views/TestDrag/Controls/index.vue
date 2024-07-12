@@ -10,8 +10,14 @@
       @start="onStart"
       @end="onEnd"
     >
-      <template #item="{element}">
-        <div class="item left-control" :data-name="element.componentName" @click="onClick(element)">{{ element.name }}</div>
+      <template #item="/** @type {{ element: ReturnType<typeof useControls>['controls'][number] }} */{element}">
+        <div
+          class="item left-control"
+          :data-name="element.componentName"
+          @click="onClick(element)"
+        >
+          {{ element.name }}
+        </div>
       </template>
     </Vuedraggable>
   </div>

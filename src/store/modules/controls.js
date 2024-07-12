@@ -79,3 +79,7 @@ function _createControls() {
     getBottomNavConfig()
   ]
 }
+
+/** @typedef {ReturnType<createControls>[number]} ActiveControl */
+/** @typedef {ReturnType<createSelectedControls>} SelectedControls */
+/** @typedef {ReturnType<createControls>} Controls */
