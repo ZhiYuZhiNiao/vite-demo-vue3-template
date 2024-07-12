@@ -17,12 +17,12 @@
       @add="onAdd"
     >
       <!-- 记得测试一下vue里面这种传递会直接作用于内层的子元素 -->
-      <template #item="{element}">
+      <template #item="/** @type {{ element: ReturnType<typeof useControls>['selectedControls'][number] }} */{element}">
         <component
           :is="element.componentName"
           :data-name="element.componentName"
           :style="getActiveControlStyle(element)"
-          v-bind="props.outProps"
+          v-bind="props.controlProps"
           @click="onClick(element)"
         />
       </template>
@@ -44,6 +44,7 @@ import Vuedraggable from 'vuedraggable'
 
 import { useControls } from '@/store'
 import { storeToRefs } from 'pinia'
+import { useVModel } from '@/hook'
 
 defineOptions({
   components: {
@@ -52,7 +53,11 @@ defineOptions({
 })
 
 const props = defineProps({
-  outProps: {
+  modelValue: {
+    type: /** @type {import('vue').PropType<ReturnType<typeof useControls>['selectedControls']>} */ (Array),
+    required: true
+  },
+  controlProps: {
     type: Object,
     default: () => ({})
   }
@@ -60,10 +65,12 @@ const props = defineProps({
 
 defineEmits(['update:modelValue'])
 
-const { activeControl, selectedControls } = storeToRefs(useControls())
+const selectedControls = useVModel(props, 'modelValue')
+
+const { activeControl } = storeToRefs(useControls())
 
 /**
- * @param {import('vue').UnwrapRef<typeof selectedControls>[number]} control
+ * @param {ReturnType<typeof useControls>['selectedControls'][number]} control
  */
 const getActiveControlStyle = (control) => {
   // ['Head', 'Tip', 'BottomNav'].includes(control.componentName) ||

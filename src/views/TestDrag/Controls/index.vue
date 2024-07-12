@@ -21,8 +21,20 @@
 import Vuedraggable from 'vuedraggable'
 import { useControls } from '@/store'
 import { storeToRefs } from 'pinia'
+import { useVModel } from '@/hook'
 
-const { controls, selectedControls, activeControl } = storeToRefs(useControls())
+const props = defineProps({
+  modelValue: {
+    type: /** @type {import('vue').PropType<ReturnType<typeof useControls>['controls']>} */ (Array),
+    required: true
+  }
+})
+
+defineEmits(['update:modelValue'])
+
+const controls = useVModel(props, 'modelValue')
+
+const { selectedControls, activeControl } = storeToRefs(useControls())
 const { controlMap, add } = useControls()
 
 const onStart = (e) => {

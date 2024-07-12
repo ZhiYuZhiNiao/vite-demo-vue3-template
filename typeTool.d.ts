@@ -27,5 +27,3 @@ export type CheckAny<T> = CheckNever<T> extends 'no' ? '不是Any' : '是Any'
 export type 取出Map的Key类型<T extends Map<any, any>> = T extends Map<infer U, any> ? U : never
 
 export type Writable<T> = { -readonly [P in keyof T]: T[P] }
-
-export type WritableMap<T extends Map<any, any>> = T extends Map<infer K, infer V> ? Map<K, Writable<T>> : T

@@ -1,11 +1,15 @@
 <template>
   <div class="test-drag-container">
     <div class="left-container item-container">
-      <Controls/>
+      <Controls
+        v-model="controls"
+      />
     </div>
     <div class="middle-container item-container">
       <div class="h5-container">
-        <Phone/>
+        <Phone
+          v-model="selectedControls"
+        />
       </div>
     </div>
     <div class="right-container item-container">
@@ -23,7 +27,7 @@ import Form from './Form/index.vue'
 import { useControls } from '@/store'
 import { storeToRefs } from 'pinia'
 
-const { activeControl } = storeToRefs(useControls())
+const { controls, activeControl, selectedControls } = storeToRefs(useControls())
 </script>
 
 <style lang="scss" scoped>
