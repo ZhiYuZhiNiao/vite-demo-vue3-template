@@ -53,6 +53,8 @@ defineEmits(['update:modelValue'])
 
 const controlProps = useVModel(props, 'modelValue')
 
+console.log(controlProps)
+
 const { activeType } = useFormTitle()
 
 const layoutList = computed(() => activeType.value === 'content' ? props.control.contentFormLayout : props.control.styleFormLayout)
