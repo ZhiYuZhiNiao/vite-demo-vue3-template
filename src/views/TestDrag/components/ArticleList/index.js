@@ -93,3 +93,5 @@ function getIsShowOpts() {
     /** @type {const} */({ label: '点赞', value: 3, key: 3, disabled: /** @type {boolean} */(false) })
   ]
 }
+
+/** @typedef {ReturnType<getConfig>['controlForm']} ControlForm */

@@ -5,7 +5,14 @@
 </template>
 
 <script setup name="ArticleList">
+const props = defineProps({
+  form: {
+    type: /** @type {import('vue').PropType<import('./index').ControlForm>} */(Object),
+    required: true
+  }
+})
 
+console.log(props.form.articleListStyle)
 </script>
 
 <style lang="scss" scoped>

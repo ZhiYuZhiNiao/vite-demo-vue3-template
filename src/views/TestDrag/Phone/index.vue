@@ -22,7 +22,7 @@
           :is="element.componentName"
           :data-name="element.componentName"
           :style="getActiveControlStyle(element)"
-          v-bind="props.controlProps"
+          :form="element.controlForm"
           @click="onClick(element)"
         />
       </template>
@@ -56,10 +56,6 @@ const props = defineProps({
   modelValue: {
     type: /** @type {import('vue').PropType<ReturnType<typeof useControls>['selectedControls']>} */ (Array),
     required: true
-  },
-  controlProps: {
-    type: Object,
-    default: () => ({})
   }
 })
 
