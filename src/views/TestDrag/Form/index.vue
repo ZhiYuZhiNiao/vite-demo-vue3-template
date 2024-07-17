@@ -13,10 +13,10 @@
         :prop="item.key"
       >
         <component
-          :is="com.type"
-          :modelValue="com.value"
-          @update:modelValue="onModelValueUpdate($event, com)"
-          :options="com.options"
+        :is="com.type"
+        :modelValue="com.value"
+        :options="com.options"
+        @update:modelValue="onModelValueUpdate($event, com)"
         />
       </ElFormItem>
     </Item>
