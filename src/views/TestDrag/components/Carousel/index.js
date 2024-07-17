@@ -38,3 +38,5 @@ function getStyleOpts() {
     /** @type {const} */({ label: '样式三', value: 3, key: 3, disabled: /** @type {boolean} */(false) })
   ]
 }
+
+/** @typedef {ReturnType<getConfig>['controlForm']} ControlForm */

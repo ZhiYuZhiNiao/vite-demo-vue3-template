@@ -100,3 +100,5 @@ function getShowContentOpts() {
     /** @type {const} */({ label: '会员价格', value: 6, key: 6, disabled: /** @type {boolean} */(false) })
   ]
 }
+
+/** @typedef {ReturnType<getConfig>['controlForm']} ControlForm */

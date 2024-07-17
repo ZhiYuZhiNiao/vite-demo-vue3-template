@@ -1,10 +1,16 @@
 <template>
   <div class="Head-view-container unmover view-component">
-    <div class="title">首页</div>
+    <div class="title">{{ props.form.headTitle }}</div>
   </div>
 </template>
 
 <script setup name="Head">
+const props = defineProps({
+  form: {
+    type: /** @type {import('vue').PropType<import('./index').ControlForm>} */(Object),
+    required: true
+  }
+})
 </script>
 
 <style lang="scss" scoped>

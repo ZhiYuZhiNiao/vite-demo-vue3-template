@@ -19,7 +19,7 @@ function createContentFormLayout() {
           maxLength: 30,
           label: /** @type {const} */('页面标题'),
           key: /** @type {const} */('headTitle'),
-          value: ''
+          value: '首页'
         },
         {
           type: /** @type {const} */('ElSwitch'),
@@ -32,3 +32,5 @@ function createContentFormLayout() {
     }
   ]
 }
+
+/** @typedef {ReturnType<getConfig>['controlForm']} ControlForm */

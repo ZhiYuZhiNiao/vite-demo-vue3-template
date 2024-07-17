@@ -1,6 +1,12 @@
 <template>
   <div class="ArticleList-view-container view-component draggable">
     <h2>文章列表</h2>
+    <p
+      v-for="([k, v]) of Object.entries(props.form)"
+      :key="k"
+    >
+      {{ k }}: {{ v }}
+    </p>
   </div>
 </template>
 
@@ -11,8 +17,6 @@ const props = defineProps({
     required: true
   }
 })
-
-console.log(props.form.articleListStyle)
 </script>
 
 <style lang="scss" scoped>

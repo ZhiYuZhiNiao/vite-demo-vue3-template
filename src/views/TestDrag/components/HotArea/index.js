@@ -24,3 +24,5 @@ function createContentFormLayout() {
     }
   ]
 }
+
+/** @typedef {ReturnType<getConfig>['controlForm']} ControlForm */

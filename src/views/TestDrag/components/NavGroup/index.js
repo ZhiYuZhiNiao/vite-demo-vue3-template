@@ -74,3 +74,5 @@ function getShowStyleOpts() {
     /** @type {const} */({ label: '分页滑动', value: 2, key: 2, disabled: /** @type {boolean} */(false) })
   ]
 }
+
+/** @typedef {ReturnType<getConfig>['controlForm']} ControlForm */

@@ -58,3 +58,5 @@ function getShowTypesOpts() {
     /** @type {const} */({ label: '样式二', value: 6, key: 6, disabled: /** @type {boolean} */(false) })
   ]
 }
+
+/** @typedef {ReturnType<getConfig>['controlForm']} ControlForm */
