@@ -27,24 +27,23 @@ export default function useElSize(el) {
       // 在这里执行你需要的操作
     }
   })
-
+  let htmlEl = null
   if (typeof _el === 'string') {
-    let htmlEl = null
     onMounted(() => {
       htmlEl = document.querySelector(_el)
       htmlEl && resizeObserver.observe(htmlEl)
-    })
-    onBeforeUnmount(() => {
-      htmlEl && resizeObserver.unobserve(htmlEl)
     })
   } else {
     watchEffect(() => {
       unref(el) && resizeObserver.observe(unref(el))
     })
-    onBeforeUnmount(() => {
-      unref(el) && resizeObserver.unobserve(unref(el))
-    })
   }
+
+  onBeforeUnmount(() => {
+    unref(el) && resizeObserver.unobserve(unref(el))
+    htmlEl && resizeObserver.unobserve(htmlEl)
+  })
+
   return {
     ...toRefs(state.value)
   }

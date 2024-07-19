@@ -1,4 +1,3 @@
-
 /**
  * @template [T=any]
  * @typedef {object} ResData<T>
@@ -7,7 +6,6 @@
  * @prop {number} [recordCount] 总记录条数
  * @prop {number} [totalPage] 总页数
  */
-
 
 /**
  * @description - 商品表
@@ -33,14 +31,13 @@
  */
 
 /**
- * @description - 
+ * @description -
  * @typedef {Object} Person
  * @property {string} code - 人员主键。程序自增生成的32位字符串。
  * @property {string} sName - 人员名称
  * @property {string} sFace - 人员头像
  * @prop {{age: number, name: string}[]} list -zzzzzzzzzzzz
  */
-
 
 /**
  * @description 获取table数据
@@ -51,13 +48,12 @@ export function GetPageList(data) {
   return Promise.resolve({
     dataList: Array.from({ length: 10 }, (_, i) => ({
       sName: `张三--${i}`,
-      code: `${i}--code`,
+      code: `${i}--code`
     }))
   })
 }
 
 /**
- * 
  * @returns {Promise<import('@/utils/request').ResData<Person>>}
  */
 export function Get() {
@@ -76,7 +72,6 @@ export function Get() {
 }
 
 /**
- * 
  * @returns {Promise<import('@/utils/request').ResData<Person>>}
  */
 export function Get2() {
@@ -91,7 +86,6 @@ export function Get2() {
 }
 
 /**
- * 
  * @returns {Promise<import('@/utils/request').ResData<any>>}
  */
 export function Add(data) {
@@ -106,7 +100,6 @@ export function Add(data) {
 }
 
 /**
- * 
  * @returns {Promise<import('@/utils/request').ResData<any>>}
  */
 export function Edit(data) {
@@ -119,7 +112,6 @@ export function Edit(data) {
   })
 }
 /**
- * 
  * @returns {Promise<import('@/utils/request').ResData<Data[]>>}
  */
 export function testReqFn2() {
@@ -134,7 +126,7 @@ export function testReqFn2() {
 }
 
 /**
- * 
+ *
  * @returns {Promise<import('@/utils/request').ResData<string>>}
  */
 export function testReqFn3() {
@@ -145,7 +137,7 @@ export function testReqFn3() {
 }
 
 /**
- * 
+ *
  * @returns {Promise<import('@/utils/request').ResData<any>>}
  */
 export function testReqFn4() {
@@ -156,7 +148,7 @@ export function testReqFn4() {
 }
 
 /**
- * 
+ *
  * @returns {Promise<import('@/utils/request').ResData<TT>>}
  */
 export function testReqFn5() {
