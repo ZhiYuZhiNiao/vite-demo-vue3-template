@@ -16,6 +16,7 @@ import { GetPageList, testReqFn2 } from '@/api/Goods'
  * @prop {() => void} [onSuccess]
  * @prop {() => void} [onError]
  * @prop {() => void} [onFinally]
+ * @prop {(fn: (reason: string) => void) => void} [beforeCancel] -类似watchEffect中的beforeCancel
  */
 
 /**
@@ -28,7 +29,7 @@ import { GetPageList, testReqFn2 } from '@/api/Goods'
  */
 export default function useRequest(reqFn, options) {
   options = options ?? {}
-  const { initDataList, formatDataListFn, onSuccess, onError, onFinally } = options
+  const { initDataList, formatDataListFn, onSuccess, onError, onFinally, beforeCancel } = options
   const reqParams = unref(options.reqParams)
   const immediate = unref(options.immediate) ?? true
   const deps = unref(options.deps) ?? []
@@ -86,6 +87,7 @@ export default function useRequest(reqFn, options) {
   }
 
   watch(deps.map(unref), () => {
+    beforeCancel?.(cancel)
     run()
   }, {
     deep: true,
