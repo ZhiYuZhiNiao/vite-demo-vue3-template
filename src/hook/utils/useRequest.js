@@ -129,6 +129,7 @@ const { dataList } = reactive(useRequest(GetPageList, {
 console.log(dataList)
 
 /**
+ * 注意, 这里的ResData中无 null, 所以我修改了基础的ResData, 第二个类型参数默认 null
  * @template [T=undefined]
  * @typedef {import('@/utils/request').ResData<T, never>} ResData
  */
@@ -148,6 +149,7 @@ console.log(dataList)
  */
 
 /**
+ * 还有就是这里修改了 如何取出 dataList类型
  * @template {(...args: any[]) => Promise<ResData<unknown>>} T
  * @typedef {Awaited<ReturnType<T>>['dataList']} 取出ReqFn中的dataList类型
  */
