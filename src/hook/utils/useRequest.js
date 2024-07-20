@@ -1,6 +1,6 @@
 // @ts-check
 import { reactive, toRefs, unref, watch } from 'vue'
-// import { GetPageList, testReqFn2, Add } from '@/api/Goods'
+import { GetPageList, testReqFn2 } from '@/api/Goods'
 
 /**
  * @template [InitDataList=undefined]
@@ -101,37 +101,36 @@ export default function useRequest(reqFn, options) {
 
 /* test------------------------------------------------------ */
 
-// const resData = reactive(useRequest(testReqFn2, {
-//   initDataList: []
-// }))
+const resData = reactive(useRequest(testReqFn2, {
+  initDataList: []
+}))
 
-// const initDataList = {
-//   name: ''
-// }
+const initDataList = {
+  obj: {
+    age: 1
+  }
+}
 
-// console.log(resData)
+console.log(resData)
 
-// const { dataList: d2 } = (useRequest(GetPageList, {
-//   initDataList,
-//   formatDataListFn(dataList) {
+const { dataList: d2 } = (useRequest(GetPageList, {
+  initDataList,
+  immediate: false
+}))
 
-//   },
-//   immediate: false
-// }))
+console.log(d2)
 
-// console.log(d2)
+const { dataList } = reactive(useRequest(GetPageList, {
+  formatDataListFn(data) {
+    return data?._sBatching ?? []
+  }
+}))
 
-// const { dataList } = reactive(useRequest(GetPageList, {
-//   formatDataListFn(data) {
-//     return data?._sBatching ?? []
-//   }
-// }))
-
-// console.log(dataList)
+console.log(dataList)
 
 /**
  * @template [T=undefined]
- * @typedef {import('@/utils/request').ResData<T>} ResData
+ * @typedef {import('@/utils/request').ResData<T, never>} ResData
  */
 
 /**
@@ -149,8 +148,8 @@ export default function useRequest(reqFn, options) {
  */
 
 /**
- * @template T
- * @typedef {T extends (...args: any[]) => Promise<ResData<infer DataList>> ? DataList : any} 取出ReqFn中的dataList类型
+ * @template {(...args: any[]) => Promise<ResData<unknown>>} T
+ * @typedef {Awaited<ReturnType<T>>['dataList']} 取出ReqFn中的dataList类型
  */
 
 /**
@@ -159,25 +158,26 @@ export default function useRequest(reqFn, options) {
  */
 
 /**
- * @template DataList
+ * @template D
  * @template DefaultValue
  * @template FormatFnReturn
+ * @template [DataList=Exclude<D, null>]
  * @template [G = DataList | DefaultValue]
  * @template [_DataList=CheckAny<DataList> extends '是Any'
     ? DefaultValue extends undefined
     ? any
     : G
     : DefaultValue extends undefined
-    ? Exclude<DataList, null> | undefined
+    ? DataList | undefined
     : DataList extends any[]
     ? DefaultValue extends never[]
-    ? Exclude<DataList, null>
+    ? DataList
     : G
     : DataList extends Record<string, any>
     ? DefaultValue extends any[]
     ? G
     : {} extends DefaultValue
-    ? Partial<Exclude<DataList, null>>
+    ? Partial<DataList>
     : G
     : G]
  * @typedef {FormatFnReturn extends undefined | null | void ? _DataList : FormatFnReturn} FormatDataList
