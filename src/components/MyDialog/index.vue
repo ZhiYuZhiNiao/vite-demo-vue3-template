@@ -26,7 +26,7 @@
 // @ts-check
 import { useDialog, useOptions } from '@/hook'
 // import useRequest from '@/hook/useRequest'
-import { Get, Add, Edit, testReqFn2 } from '@/api/Goods'
+import { Get, Add, Edit, GetPageToList } from '@/api/Goods'
 // import { completeAssign } from '@/utils'
 import { reactive, ref } from 'vue'
 
@@ -62,7 +62,7 @@ const testData = ref({
   count: 0
 })
 
-const resData2 = reactive(useOptions(testReqFn2, {
+const resData2 = reactive(useOptions(GetPageToList, {
   props: {
     label: 'sName',
     value: 'code'

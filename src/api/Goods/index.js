@@ -1,159 +1,125 @@
 /**
- * @template [T=any]
- * @typedef {object} ResData<T>
- * @prop {T | null} dataList 主体数据
- * @prop {{} | null} [info]
- * @prop {number} [recordCount] 总记录条数
- * @prop {number} [totalPage] 总页数
- */
-
-/**
- * @description - 商品表
+ * @description 商品列表
  * @typedef {Object} Data
- *
- * @property {string} code - 商品主键。程序自增生成的32位字符串。
- * @property {string} fkCust - 客户编码。长度为4的字符串，为外键，参照TbCustomer表。
- * @property {string} sName - 商品名称。长度为50的字符串。
- * @property {string} sImg - 商品图片地址。长度为50的字符串。
- * @property {string} fkClassify - 所属分类。长度为4的字符串。
- * @property {string} sClassify - 分类名称
- * @property {string} fkMeal - 所属餐食。长度为4的字符串 使用竖线 | 分割 (split后是一个数组)
- * @property {string[]} [_fkMeal] - 所属餐食。fkMeal 使用竖线 | 分割之后的数组
- * @property {string} sMeal - 餐时名称
- * @property {string} sBatching - 配料信息。以Json形式存储的Text类型数据。
- * @prop {{code: string, unit: '克', name: string}[]} _sBatching - zzzzz
- * @prop {{age: number, name: string}[]} list -zzzzzzzzzzzz
- * @property {number | string} sPrice - 商品价格。长度为5的字符串。
- * @property {string} sDescription - 商品说明。Text类型数据。
- * @property {string} sRemark - 备注信息。Text类型数据。
- * @property {1 | 0 | null} nDelete - 标记删除状态。数值类型，1表示已删除 其他值或不存在表示未删除。
- * @property {string} tCreate - 创建时间。datetime类型，表示商品的创建时间。
+ * @prop {string} code - 数据id 唯一
+ * @prop {string} sName - 产品名称
+ * @prop {string} sNum - 产品编号
+ * @prop {string} fkClass - 产品类型
+ * @prop {string} sGoodsImgs - 产品图片 json []
+ * @prop {string} sDetailImgs - 详情图片 json []
+ * @prop {boolean} isHasRelatedGoods - 是否有关联产品
+ * @prop {string} fkRelatedGoods - 关联产品code
+ * @prop {string} fkIndustry - 所属行业
+ * @prop {import('typeTool').获取Map类型中得key联合类型<getGradeTypeMap>} nGrade
+ * - 产品等级 1 高级, 2 中级, 3 低级
+ * @prop {string} sParams - 产品参数 json []
+ * @prop {string} sSpec - 产品规格 json []
+ * @prop {SpecType} Spec
+ * @prop {import('typeTool').获取Map类型中得key联合类型<typeof getApprovalStatusMap>} nAudit
+ * - 审批状态: 1 待审批, 2 审批通过, 3 审批拒绝
+ * @prop {import('typeTool').获取Map类型中得key联合类型<getStateMap>} nState
+ * - 产品状态: 1 上架, 2 下架
+ */
+
+import request from '@/utils/request'
+import { jsonParse } from '@/utils'
+// import { pageList, action, get } from './Mock'
+import i18n from '@/lang/index'
+// eslint-disable-next-line no-unused-vars
+import { getApprovalStatusMap } from '@/api'
+const $t = i18n.global.t
+
+/** @description 产品状态 */
+export const getStateMap = () => new Map([
+  /** @type {const} */([1, { label: /** @type {'上架'} */($t('上架')), value: 1 }]),
+  /** @type {const} */([2, { label: /** @type {'下架'} */($t('下架')), value: 2 }])
+])
+
+export const getSupplyTypeMap = () => new Map([
+  /** @type {const} */([1, { label: /** @type {'平台'} */($t('平台')), value: 1 }]),
+  /** @type {const} */([2, { label: /** @type {'供应商'} */($t('供应商')), value: 2 }])
+])
+
+export const getGradeTypeMap = () => new Map([
+  /** @type {const} */([1, { label: /** @type {'高级'} */($t('高级')), value: 1 }]),
+  /** @type {const} */([2, { label: /** @type {'中级'} */($t('中级')), value: 2 }]),
+  /** @type {const} */([3, { label: /** @type {'低级'} */($t('低级')), value: 3 }])
+])
+
+/**
+ * @description 解析参数
+ * @param {string} val
+ * @returns {{label: string, value: string, key: string}[]}
+ */
+export const jsonParseParams = (val) => jsonParse(val, [])
+
+/**
+ * @description 规格对象
+ * @typedef {Object} SpecType
+ * @prop {string} key - 唯一标识
+ * @prop {string} sImg - 规格图片, 只能上传一张
+ * @prop {string} sContent - 规格内容
+ * @prop {undefined | number} nPlatformPrice - 平台价格
+ * @prop {undefined | number} nSellingPrice - 销售价格
+ * @prop {boolean} isDefault - 是否默认
  */
 
 /**
- * @description -
- * @typedef {Object} Person
- * @property {string} code - 人员主键。程序自增生成的32位字符串。
- * @property {string} sName - 人员名称
- * @property {string} sFace - 人员头像
- * @prop {{age: number, name: string}[]} list -zzzzzzzzzzzz
+ * @description 解析规格
+ * @param {string} val
+ * @returns {SpecType[]}
  */
+export const jsonParseSpec = (val) => jsonParse(val, [])
 
-/**
- * @description 获取table数据
- * @param {{pageSize: number, pageNum: number, sName?: string}} data
- * @returns {Promise<import('@/utils/request').ResData<Data>>}
- */
-export function GetPageList(data) {
-  return Promise.resolve({
-    dataList: Array.from({ length: 10 }, (_, i) => ({
-      sName: `张三--${i}`,
-      code: `${i}--code`
-    }))
+/** @type {Data} */
+// const item = {
+//   code: 'zz',
+//   sName: '比亚迪',
+//   sNum: '9527',
+//   nNum: 22,
+//   nAudit: 1,
+//   nState: 1,
+//   sContacts: '张三',
+//   sPhone: '18888888888'
+// }
+
+/** @returns {Promise<import('@/utils/request').ResData<Data[]>>} */
+export const GetPageToList = (data) => {
+  return request({
+    url: '/GoodsList/GetPageToList',
+    method: 'post',
+    data
   })
 }
 
-/**
- * @returns {Promise<import('@/utils/request').ResData<Person>>}
- */
-export function Get() {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve({
-        info: null,
-        dataList: {
-          sName: '商品1',
-          code: '001',
-          sFace: 'xxxxxx'
-        }
-      })
-    }, 2500)
+/** @returns {Promise<import('@/utils/request').ResData<Data>>} */
+export const Get = (params) => {
+  return request({
+    url: '/GoodsList/Get',
+    params
+  })
+}
+/** @returns {Promise<import('@/utils/request').ResData>} */
+export const Edit = (data) => {
+  return request({
+    url: '/GoodsList/Edit',
+    method: 'post',
+    data
+  })
+}
+/** @returns {Promise<import('@/utils/request').ResData>} */
+export const Add = (data) => {
+  return request({
+    url: '/GoodsList/Add',
+    method: 'post',
+    data
   })
 }
 
-/**
- * @returns {Promise<import('@/utils/request').ResData<Person>>}
- */
-export function Get2() {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve({
-        info: null,
-        dataList: null
-      })
-    }, 2500)
-  })
-}
-
-/**
- * @returns {Promise<import('@/utils/request').ResData<any>>}
- */
-export function Add(data) {
-  console.log('调用新增保存接口拉拉')
-  console.log('data = ', data)
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      // reject('出错拉拉')
-      resolve()
-    }, 2500)
-  })
-}
-
-/**
- * @returns {Promise<import('@/utils/request').ResData<any>>}
- */
-export function Edit(data) {
-  console.log('调用编辑保存接口拉拉')
-  console.log('data = ', data)
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve()
-    }, 2500)
-  })
-}
-/**
- * @returns {Promise<import('@/utils/request').ResData<Data[]>>}
- */
-export function testReqFn2() {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve({
-        info: null,
-        dataList: []
-      })
-    }, 2500)
-  })
-}
-
-/**
- *
- * @returns {Promise<import('@/utils/request').ResData<string>>}
- */
-export function testReqFn3() {
-  return Promise.resolve({
-    info: {},
-    dataList: '嘿嘿'
-  })
-}
-
-/**
- *
- * @returns {Promise<import('@/utils/request').ResData<any>>}
- */
-export function testReqFn4() {
-  return Promise.resolve({
-    info: {},
-    dataList: '嘿嘿'
-  })
-}
-
-/**
- *
- * @returns {Promise<import('@/utils/request').ResData<TT>>}
- */
-export function testReqFn5() {
-  return Promise.resolve({
-    info: {},
-    dataList: '嘿嘿'
+export const Delete = (data) => {
+  return request({
+    url: '/GoodsList/Delete',
+    method: 'post',
+    data
   })
 }
