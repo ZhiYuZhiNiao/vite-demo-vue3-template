@@ -54,7 +54,7 @@ export function GetPageList(data) {
 }
 
 /**
- * @returns {Promise<import('@/utils/request').ResData<Person>>}
+ * @returns {Promise<import('@/utils/request').ResData<Data>>}
  */
 export function Get() {
   return new Promise((resolve, reject) => {
