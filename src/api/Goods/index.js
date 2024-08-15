@@ -24,26 +24,26 @@
 import request from '@/utils/request'
 import { jsonParse } from '@/utils'
 // import { pageList, action, get } from './Mock'
-import i18n from '@/lang/index'
+// import i18n from '@/lang/index'
 // eslint-disable-next-line no-unused-vars
-import { getApprovalStatusMap } from '@/api'
-const $t = i18n.global.t
+// import { getApprovalStatusMap } from '@/api'
+// const $t = i18n.global.t
 
 /** @description 产品状态 */
 export const getStateMap = () => new Map([
-  /** @type {const} */([1, { label: /** @type {'上架'} */($t('上架')), value: 1 }]),
-  /** @type {const} */([2, { label: /** @type {'下架'} */($t('下架')), value: 2 }])
+  /** @type {const} */([1, { label: '上架', value: 1 }]),
+  /** @type {const} */([2, { label: '下架', value: 2 }])
 ])
 
 export const getSupplyTypeMap = () => new Map([
-  /** @type {const} */([1, { label: /** @type {'平台'} */($t('平台')), value: 1 }]),
-  /** @type {const} */([2, { label: /** @type {'供应商'} */($t('供应商')), value: 2 }])
+  /** @type {const} */([1, { label: '平台', value: 1 }]),
+  /** @type {const} */([2, { label: '供应商', value: 2 }])
 ])
 
 export const getGradeTypeMap = () => new Map([
-  /** @type {const} */([1, { label: /** @type {'高级'} */($t('高级')), value: 1 }]),
-  /** @type {const} */([2, { label: /** @type {'中级'} */($t('中级')), value: 2 }]),
-  /** @type {const} */([3, { label: /** @type {'低级'} */($t('低级')), value: 3 }])
+  /** @type {const} */([1, { label: '高级', value: 1 }]),
+  /** @type {const} */([2, { label: '中级', value: 2 }]),
+  /** @type {const} */([3, { label: '低级', value: 3 }])
 ])
 
 /**
