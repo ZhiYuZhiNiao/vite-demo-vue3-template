@@ -96,3 +96,17 @@ export function uuidv4() {
     (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
   )
 }
+
+/**
+ * @param {string} jsonString
+ * @param {{} | []} defaultValue
+ * @returns {{} | []}
+ */
+export const jsonParse = (jsonString, defaultValue) => {
+  if (!jsonString) return defaultValue
+  try {
+    return JSON.parse(jsonString)
+  } catch (e) {
+    return defaultValue
+  }
+}
